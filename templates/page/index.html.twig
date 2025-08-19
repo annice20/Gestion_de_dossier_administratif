@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello PageController!{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+ <div class="d-flex custom-gap justify-content-center mt-5">
+     <div class="card">
+        <h1 class="card-title">ETAT CIVIL DE BASE</h1>
+        <div class="card-body">
+        <h3>Nom:</h3>
+        <h3>Prénom:</h3>
+        <h3>Date et lieu de naissance:</h3>
+        <h3>Nationalité:</h3>
+        </div>
+    </div>
+     <div class="card">
+        <h1 class="card-title">COORDONNEES</h1>
+         <div class="card-body">
+        <h3>Nom:</h3>
+        <h3>Adresse:</h3>
+        <h3>Numéro de téléphone:</h3>
+        <h3>Email:</h3>
+        <h3>Langue:</h3>
+        </div>
+    </div>
+ </div>
+  <h2 class="title">CANAL DE CONTACT:</h2>
+  <div class="contact-info">
+  <p>
+  Contactez-nous sur: <a href="#">Etaratasy@gmail.com</a> ou par SMS vers <a href="#">034 12 34 56</a>.
+  <p>
+  </div>
+
+{% endblock %}
