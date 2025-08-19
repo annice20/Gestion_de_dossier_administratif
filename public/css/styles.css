@@ -17,6 +17,45 @@ body {
     margin-left: 100px;
 }
 
+.container h1{
+   font-family: 'Inter', sans-serif;
+   color: #A7690B;
+   margin-top: 60px;
+   text-align: center;
+}
+
+.intro {
+    width: 70%;
+    margin: auto;
+    margin-top: 50px;
+}
+
+.container h2 {
+    font-family: 'Inter', sans-serif;
+    text-align: center;
+    margin-top: 40px;
+}
+
+.accueildetails {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 50px;
+}
+
+.detail {
+    width: 22%;
+    height: 20vh;
+    background-color: #436787;
+    color: white;
+    text-align: center;
+}
+
+.detail p{
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
 .d-flex.custom-gap {
     gap: 4rem;
 }
