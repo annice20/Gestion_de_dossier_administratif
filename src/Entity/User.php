@@ -48,6 +48,16 @@ class User
     #[ORM\Column(length: 255)]
     private ?string $telephone = null;
 
+    #[ORM\ManyToOne(inversedBy: 'user_id')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?UserRole $userRole = null;
+
+    #[ORM\OneToOne(mappedBy: 'user_id', cascade: ['persist', 'remove'])]
+    private ?CitizenProfile $citizenProfile = null;
+
+    #[ORM\OneToOne(mappedBy: 'user_id', cascade: ['persist', 'remove'])]
+    private ?CodeValidation $codeValidation = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -181,6 +191,52 @@ class User
     public function setTelephone(string $telephone): static
     {
         $this->telephone = $telephone;
+
+        return $this;
+    }
+
+    public function getUserRole(): ?UserRole
+    {
+        return $this->userRole;
+    }
+
+    public function setUserRole(?UserRole $userRole): static
+    {
+        $this->userRole = $userRole;
+
+        return $this;
+    }
+
+    public function getCitizenProfile(): ?CitizenProfile
+    {
+        return $this->citizenProfile;
+    }
+
+    public function setCitizenProfile(CitizenProfile $citizenProfile): static
+    {
+        // set the owning side of the relation if necessary
+        if ($citizenProfile->getUserId() !== $this) {
+            $citizenProfile->setUserId($this);
+        }
+
+        $this->citizenProfile = $citizenProfile;
+
+        return $this;
+    }
+
+    public function getCodeValidation(): ?CodeValidation
+    {
+        return $this->codeValidation;
+    }
+
+    public function setCodeValidation(CodeValidation $codeValidation): static
+    {
+        // set the owning side of the relation if necessary
+        if ($codeValidation->getUserId() !== $this) {
+            $codeValidation->setUserId($this);
+        }
+
+        $this->codeValidation = $codeValidation;
 
         return $this;
     }
