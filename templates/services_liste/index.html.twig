@@ -1,0 +1,123 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ServicesListeController!{% endblock %}
+
+{% block body %}
+
+</head>
+
+    <div class="container2">
+       
+
+        <div class="service-table">
+         <div class="header2">
+            <h1>LISTE DES SERVICES</h1>
+        </div>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Lequel</th>
+                        <th>Pièces requises</th>
+                        <th>Délais</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="text-primary">Acte de naissance</td>
+                        <td>
+                            <div class="piece-item">• Livre de famille</div>
+                            <div class="piece-item">• Résidence</div>
+                        </td>
+                        <td>2 heures</td>
+                    </tr>
+                    <tr>
+                        <td class="text-primary">Acte de mariage</td>
+                        <td>
+                            <div class="piece-item">• Acte de naissance</div>
+                            <div class="piece-item">• Résidence</div>
+                            <div class="piece-item">• Acte de célibataire</div>
+                        </td>
+                        <td>Le jour du mariage</td>
+                    </tr>
+                    <tr>
+                        <td class="text-primary">Acte de décès</td>
+                        <td>
+                            <div class="piece-item">• Certificat de décès</div>
+                            <div class="piece-item">• Pièce d'identité du commandeur</div>
+                            <div class="piece-item">• Montantes sur le déficient</div>
+                            <div class="piece-item">• Livret de famille</div>
+                        </td>
+                        <td>24 heures</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="demande-section">
+           
+            
+            <div class="demande-header">
+                <h1>DEMANDE</h1>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">Ref :</label>
+                    <input type="text" class="form-control">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Demandeur :</label>
+                    <input type="text" class="form-control">
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">Statut :</label>
+                    <select class="form-select">
+                        <option value="">Sélectionnez un statut</option>
+                        <option value="nouveau">Nouveau</option>
+                        <option value="en-cours">En cours</option>
+                        <option value="traite">Traité</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Centre :</label>
+                    <input type="text" class="form-control">
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">Priorité :</label>
+                    <select class="form-select">
+                        <option value="">Sélectionnez une priorité</option>
+                        <option value="normale">Normale</option>
+                        <option value="urgente">Urgente</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Montant :</label>
+                    <input type="number" class="form-control">
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">Canal :</label>
+                    <select class="form-select">
+                        <option value="">Sélectionnez un canal</option>
+                        <option value="en-ligne">En ligne</option>
+                        <option value="guichet">Guichet</option>
+                        <option value="telephone">Téléphone</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Pièce jointe :</label>
+                    <input type="file" class="form-control">
+                </div>
+            </div>
+            
+            <button class="btn-valider">Valider</button>
+        </div>
+    </div>
+{% endblock %}
