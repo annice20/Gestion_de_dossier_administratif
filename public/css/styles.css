@@ -104,3 +104,60 @@ body {
 }
 
 
+
+
+
+/*Pièce joint*/
+.form-container {
+    width: 550px;
+    height: 700px;
+    margin: 50px auto;
+    background: #ddb2b1;
+    padding: 20px;
+    border-radius: 8px;
+    color: rgb(5, 3, 3);
+  }
+  
+  .form-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    
+  }
+  
+  label {
+    display: block;
+    margin: 10px 0 5px;
+  }
+  
+  select, input[type="text"], input[type="file"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: none;
+  }
+  
+  button {
+    width: 100%;
+    padding: 10px;
+    background: #a9742a;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background: #8a5f1f;
+  }
+  
+  .payment-link {
+    display: block;
+    text-align: center;
+    margin-top: 10px;
+    color: #0000ff;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  

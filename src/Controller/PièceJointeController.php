@@ -6,13 +6,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-final class CouvreController extends AbstractController
+final class PièceJointeController extends AbstractController
 {
-    #[Route('/', name: 'app_couvre')]
+    #[Route('/pi/ce/jointe', name: 'app_pi_ce_jointe')]
     public function index(): Response
     {
-        return $this->render('couvre/index.html.twig', [
-            'controller_name' => 'CouvreController',
+        return $this->render('pièce_jointe/index.html.twig', [
+            'controller_name' => 'PièceJointeController',
         ]);
     }
 }

@@ -1,0 +1,84 @@
+{% extends 'couvre.html.twig' %}
+
+{% block title %}Bienvenu!{% endblock %}
+
+{% block body %}
+<style>
+    .card {
+        width: 35%;
+        margin: auto;
+        margin-top: 60px;
+        background-color: #C5ABAB;
+        border-radius: 12px;
+        padding: 2rem;
+        text-align: center;
+    }
+
+    .card-body h1 {
+        margin-top: 70px;
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    #code-inputs {
+        margin-top: 2rem;
+        display: flex;
+        justify-content: center;
+        gap: 0.8rem;
+    }
+
+    .digit {
+        width: 45px;
+        height: 45px;
+        text-align: center;
+        font-size: 1.2rem;
+        border: 2px solid #aaa;
+        border-radius: 8px;
+        outline: none;
+        transition: border-color 0.3s ease;
+    }
+
+    .digit:focus {
+        border-color: #2315C3;
+        box-shadow: 0 0 5px rgba(35, 21, 195, 0.5);
+    }
+
+    .envoyer {
+        border: none;
+        background-color: #2315C3;
+        color: white;
+        width: 40%;
+        height: 50px;
+        border-radius: 10px;
+        margin-top: 2rem;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .envoyer:hover {
+        background-color: #1a1096;
+    }
+
+    p {
+        margin-top: 1rem;
+    }
+</style>
+
+<div class="card">
+  <div class="card-body">
+    <h1>Code de vérification</h1>
+    <p class="mt-5">Veuillez entrer votre code de vérification reçu par email</p>
+    <div id="code-inputs">
+        <input type="text" maxlength="1" class="digit">
+        <input type="text" maxlength="1" class="digit">
+        <input type="text" maxlength="1" class="digit">
+        <input type="text" maxlength="1" class="digit">
+        <input type="text" maxlength="1" class="digit">
+        <input type="text" maxlength="1" class="digit">
+    </div>
+    <button class="envoyer">Envoyer</button>
+    <p>Vous n'avez pas encore reçu le code ? <a href="#">Renvoyer</a></p>
+  </div>
+</div>
+{% endblock %}
