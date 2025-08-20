@@ -1,0 +1,57 @@
+{% extends 'couvre.html.twig' %}
+
+{% block title %}Bienvenu!{% endblock %}
+
+{% block body %}
+<style>
+    .card {
+        width: 39%;
+        margin: auto;
+        top: 49px;
+        background-color: #C5ABAB;
+    }
+
+    .card-body {
+        margin-left: 30px;
+        margin-top: 70px;
+    }
+
+    #code-inputs {
+        margin-top: 2rem;
+    }
+
+    .digit {
+        width: 10%;
+        height: 6vh;
+        margin-right: 1rem;
+    }
+
+    .envoyer {
+        border: none;
+        background-color: #2315C3;
+        color: white;
+        width: 30%;
+        height: 8vh;
+        border-radius: 10px;
+        margin-top: 3rem;
+        margin-left: 30%;
+    }
+</style>
+
+<div class="card">
+  <div class="card-body">
+    <h1>Code de vérification</h1>
+    <p>Veuillez entrer votre code de vérification par email</p>
+    <div id="code-inputs">
+        <input type="text" maxlength="1" class="digit">
+        <input type="text" maxlength="1" class="digit">
+        <input type="text" maxlength="1" class="digit">
+        <input type="text" maxlength="1" class="digit">
+        <input type="text" maxlength="1" class="digit">
+        <input type="text" maxlength="1" class="digit">
+    </div>
+    <button class="envoyer">Envoyer</button>
+    <p class="mt-3">Vous n'avez pas encore reçu le code? <a href="#">Renvoyer</a></p>
+  </div>
+</div>
+{% endblock %}
