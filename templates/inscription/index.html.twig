@@ -1,0 +1,74 @@
+{# templates/registration/index.html.twig #}
+
+{% extends 'couvre.html.twig' %}
+
+{% block title %}Inscription & Profil{% endblock %}
+
+{% block body %}
+    
+
+    <div class="container-main">
+        {# Section Inscription #}
+        <div class="form-card">
+            <h2 class="form-title">Inscription</h2>
+            {{ form_start(formInscription) }}
+                {# Email #}
+                <div class="form-field-row">
+                    {{ form_widget(formInscription.email, {'attr': {'placeholder': 'Entrer votre e-mail'}}) }}
+                </div>
+                {# Téléphone #}
+                <div class="form-field-row">
+                    {{ form_widget(formInscription.telephone, {'attr': {'placeholder': 'Entrer votre numéro de téléphone'}}) }}
+                </div>
+                {# Mot de passe #}
+                <div class="form-field-row">
+                    {{ form_widget(formInscription.password, {'attr': {'placeholder': 'Entrer le mot de passe'}}) }}
+                </div>
+                {# Langue #}
+                <div class="form-field-row" style="display: flex; text-align: right;">
+                    <label style="margin-right: 15px;">Langue:</label>
+                    {{ form_widget(formInscription.langue) }}
+                </div>
+                <button type="submit" class="btn btn-inscription">S'inscrire</button>
+            {{ form_end(formInscription) }}
+        </div>
+
+        {# Section Profil #}
+        <div class="form-card">
+            <h2 class="form-title">Profil</h2>
+            {{ form_start(formProfil) }}
+                {# Nom et Prénom #}
+                <div class="form-group-inline">
+                    <div class="form-field-row" >
+                        {{ form_widget(formProfil.nom, {'attr': {'placeholder': 'Nom'}}) }}
+                    </div>
+                    <div class="form-field-row">
+                        {{ form_widget(formProfil.prenom, {'attr': {'placeholder': 'Prénom'}}) }}
+                    </div>
+                </div>
+                {# Date de naissance #}
+                <div class="form-field-row" style="margin-top: 10px;">
+                    {{ form_label(formProfil.dateDeNaissance, 'Date de naissance :') }}
+                    {{ form_widget(formProfil.dateDeNaissance, {'attr': {'placeholder': 'dd / mm / yyyy'}}) }}
+                </div>
+                {# Numéro CIN #}
+                <div class="form-field-row">
+                    {{ form_label(formProfil.numeroCIN, 'Numéro CIN :') }}
+                    {{ form_widget(formProfil.numeroCIN) }}
+                </div>
+                {# Adresse et Lot #}
+                <div class="form-field-row">
+                    {{ form_label(formProfil.adresse, 'Adresse :') }}
+                    {{ form_widget(formProfil.adresse, {'attr': {'placeholder': 'Lot'}}) }}
+        
+                </div>
+                {# Commune #}
+                <div class="form-field-row">
+                    {{ form_label(formProfil.commune, 'Commune :') }}
+                    {{ form_widget(formProfil.commune, {'attr': {'placeholder': 'à'}}) }}
+                </div>
+                <button type="submit" class="btn btn-creer" >Créer</button>
+            {{ form_end(formProfil) }}
+        </div>
+    </div>
+{% endblock %}

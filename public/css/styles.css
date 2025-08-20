@@ -160,4 +160,129 @@ body {
     text-decoration: none;
     font-weight: bold;
   }
+
+  
+/*inscription et profil*/          
+.container-main {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .form-card {
+            background-color: #ddb2b2; /* Couleur rose de l'image */
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            margin: 15px;
+            width: 400px; /* Largeur fixe pour les cartes */
+        }
+        .form-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        /* Style des champs de formulaire */
+        .form-field-row {
+            margin-bottom: 20px;
+        }
+        .form-field-row label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+        }
+        .form-field-row input, .form-field-row select {
+            width: 100%;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            background-color: #fff;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+            font-size: 16px;
+        }
+        /* Mise en page spécifique pour les champs alignés horizontalement */
+        .form-group-inline {
+            display: flex;
+            gap: 15px;
+        }
+        .form-group-inline .form-field-row {
+            flex-grow: 1;
+            margin-bottom: 0;
+        }
+    
+    
+/* Style des champs de formulaire */
+    .form-field-row {
+    margin-bottom: 20px;
+    display: flex; 
+    align-items: center; 
+}
+
+    .form-field-row label {
+    flex-shrink: 0; 
+    width: 140px; 
+    color: #555;
+    margin-right: 15px;
+    text-align: right; 
+}
+
+    .form-field-row .form-group-aligned {
+    flex-grow: 1; 
+}
+
+/* Style des champs de saisie */
+.form-field-row input {
+    width: 100%;
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    background-color: #fff;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+    font-size: 16px;
+}
+
+/* Style spécifique pour le bouton */
+.btn-creer {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 20px;
+    background-color: #4267b2; /* Bleu */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+        
+        /* Style des boutons */
+        .btn {
+            display: block;
+            width: 50%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            margin-left: 25%;
+        }
+        .btn-inscription {
+            background-color: #6d0a07; /* Rouge */
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .btn-creer {
+            background-color: #051b47; /* Bleu */
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
   
