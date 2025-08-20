@@ -1,0 +1,37 @@
+.container2{
+    display: flex;
+    gap: 4rem;
+    margin: 0 auto;
+    top: 0;
+    justify-content: center;
+    padding: 1rem;
+}
+.header2{
+    text-align: center;
+    margin-bottom: 1rem;
+}
+.table {
+    height: 25rem;
+}
+
+.demande-header {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+.btn-valider {
+    display: block;
+    margin: 2rem auto;
+    padding: 0.5rem 2rem;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    &:hover {
+       transform: translate(-3px);
+       -webkit-transform: translate(-3px);
+       -moz-transform: translate(-3px);
+       -ms-transform: translate(-3px);
+       -o-transform: translate(-3px);
+}
+}
