@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class InscriptionController extends AbstractController
 {
-    #[Route('/', name: 'app_inscription')]
+    #[Route('/inscription', name: 'app_inscription')]
     public function index(Request $request, EntityManagerInterface $entityManager): Response
     {
         // On crée une nouvelle instance de l'entité User
