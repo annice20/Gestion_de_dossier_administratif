@@ -18,6 +18,19 @@ final class PaymentController extends AbstractController
         $form = $this->createForm(PaymentType::class, $payment);
         $form->handleRequest($request);
 
+        if($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($payment);
+            $entityManager->flush();
+
+            $this->addFlash(
+                'success',
+                'Le paiement a été enregistré avec succès !'
+            );
+            
+            return $this->redirectToRoute('app_payment');
+        }
+
         return $this->render('payment/index.html.twig', [
             'form' => $form->createView(),
         ]);

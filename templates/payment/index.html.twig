@@ -20,8 +20,10 @@
         }
 
         .savepayment {
+            border: none;
             background-color: #A7690B;
             width: 45%;
+            height: 50px;
             border-radius: 15px;
         }
     </style>
@@ -29,6 +31,11 @@
     <h1 class="mt-5">Paiement</h1>
     <div class="card">
         <div class="card-body">
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-success">
+                    {{ message }}
+                </div>
+            {% endfor %}
             {{ form_start(form) }}
                 <div class="row mb-3">
                     {{ form_label(form.request, null, {
