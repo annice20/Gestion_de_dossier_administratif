@@ -4,42 +4,27 @@
 
 {% block body %}
 
-
-
 <div class="pj-container">
     <h2>Pièce jointe</h2>
-    <form id="pieceForm" method="POST" enctype="multipart/form-data">
-        <label for="demande">Demande associée :</label>
-        <select id="demande" name="demande" required>
-            <option value="">-- Sélectionner --</option>
-            <option value="demande1">Demande 1</option>
-            <option value="demande2">Demande 2</option>
-        </select>
 
-        <label for="type">Type de pièce :</label>
-        <select id="type" name="type_piece" required>
-            <option value="">-- Sélectionner --</option>
-            <option value="carteID">Carte d'identité</option>
-            <option value="justificatif">Justificatif de domicile</option>
-        </select>
+    {{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
 
-        <label for="fichier">Fichier :</label>
-        <input type="file" id="fichier" name="fichier" required>
+    {{ form_row(form.type_piece) }}
 
-        <label for="nom">Nom du fichier :</label>
-        <input type="text" id="nom" name="nom_fichier" placeholder="Nom du fichier" required>
+    {{ form_row(form.nom_fichier) }}
 
-        <label for="statut">Statut de vérification :</label>
-        <select id="statut" name="verif_statut" required>
-            <option value="">-- Sélectionner --</option>
-            <option value="en_attente">En attente</option>
-            <option value="valide">Validé</option>
-            <option value="refuse">Refusé</option>
-        </select>
+    {{ form_row(form.hash) }}
 
-        <button type="submit">Enregistrer</button>
-    </form>
-    <a href="{{ path('app_payment') }}" class="payment-link">Effectuer le paiement</a>
+    {{ form_row(form.url) }}
+
+    {{ form_row(form.taille) }}
+
+    {{ form_row(form.verif_statut) }}
+
+    <button type="submit">Enregistrer</button>
+
+    {{ form_end(form) }}
+
+    <a href="paiement.html" class="payment-link">Effectuer le paiement</a>
 </div>
-
 {% endblock %}
