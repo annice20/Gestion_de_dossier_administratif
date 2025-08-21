@@ -1,3 +1,4 @@
+
 .container2{
     display: flex;
     gap: 4rem;
@@ -34,4 +35,29 @@
        -ms-transform: translate(-3px);
        -o-transform: translate(-3px);
 }
+}
+.form-field-row label{
+    text-align: right;
+    margin-right: 1rem;
+}
+.form-field-row input{
+   height: 10px;
+}
+.form-field-row select{
+    height: 10px;
+}
+.btn{
+    background-color: green;
+    height: auto;
+    text-align: center;
+    justify-content: center;
+}
+.demande-section {
+    background-color: #D9D9D9;
+    padding: 2rem;
+    border-radius: 1rem;
+    -webkit-border-radius: 1rem;
+    -moz-border-radius: 1rem;
+    -ms-border-radius: 1rem;
+    -o-border-radius: 1rem;
 }

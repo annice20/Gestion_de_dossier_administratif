@@ -19,17 +19,11 @@ class Request
     #[ORM\Column(length: 50)]
     private ?string $ref = null;
 
-    /**
-     * @var Collection<int, RequestType>
-     */
-    #[ORM\OneToMany(targetEntity: RequestType::class, mappedBy: 'request')]
-    private Collection $type_id;
+    #[ORM\ManyToMany(targetEntity: RequestType::class, mappedBy: 'requests')]
+    private Collection $types;
 
-    /**
-     * @var Collection<int, CitizenProfile>
-     */
-    #[ORM\OneToMany(targetEntity: CitizenProfile::class, mappedBy: 'request')]
-    private Collection $demandeur_id;
+    #[ORM\ManyToMany(targetEntity: CitizenProfile::class, mappedBy: 'requests')]
+    private Collection $demandeurs;
 
     #[ORM\Column(length: 20)]
     private ?string $statut = null;
@@ -46,36 +40,36 @@ class Request
     #[ORM\Column(length: 30)]
     private ?string $canal = null;
 
-    #[ORM\Column]
-    private ?\DateTime $created_at = null;
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column]
-    private ?\DateTime $updated_at = null;
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    private ?\DateTimeImmutable $updatedAt = null;
 
-    #[ORM\ManyToOne(inversedBy: 'request_id')]
+    #[ORM\ManyToOne(inversedBy: 'requests')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Attachment $attachment = null;
 
-    #[ORM\ManyToOne(inversedBy: 'request_id')]
+    #[ORM\ManyToOne(inversedBy: 'requests')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Document $document = null;
 
-    #[ORM\ManyToOne(inversedBy: 'request_id')]
+    #[ORM\ManyToOne(inversedBy: 'requests')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Task $task = null;
 
-    #[ORM\ManyToOne(inversedBy: 'request_id')]
+    #[ORM\ManyToOne(inversedBy: 'requests')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Payment $payment = null;
 
-    #[ORM\ManyToOne(inversedBy: 'request_id')]
+    #[ORM\ManyToOne(inversedBy: 'requests')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Decision $decision = null;
 
     public function __construct()
     {
-        $this->type_id = new ArrayCollection();
-        $this->demandeur_id = new ArrayCollection();
+        $this->types = new ArrayCollection();
+        $this->demandeurs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -91,67 +85,56 @@ class Request
     public function setRef(string $ref): static
     {
         $this->ref = $ref;
-
         return $this;
     }
 
     /**
      * @return Collection<int, RequestType>
      */
-    public function getTypeId(): Collection
+    public function getTypes(): Collection
     {
-        return $this->type_id;
+        return $this->types;
     }
 
-    public function addTypeId(RequestType $typeId): static
+    public function addType(RequestType $type): static
     {
-        if (!$this->type_id->contains($typeId)) {
-            $this->type_id->add($typeId);
-            $typeId->setRequest($this);
+        if (!$this->types->contains($type)) {
+            $this->types->add($type);
+            $type->addRequest($this);
         }
-
         return $this;
     }
 
-    public function removeTypeId(RequestType $typeId): static
+    public function removeType(RequestType $type): static
     {
-        if ($this->type_id->removeElement($typeId)) {
-            // set the owning side to null (unless already changed)
-            if ($typeId->getRequest() === $this) {
-                $typeId->setRequest(null);
-            }
+        if ($this->types->removeElement($type)) {
+            $type->removeRequest($this);
         }
-
         return $this;
     }
 
     /**
      * @return Collection<int, CitizenProfile>
      */
-    public function getDemandeurId(): Collection
+    public function getDemandeurs(): Collection
     {
-        return $this->demandeur_id;
+        return $this->demandeurs;
     }
 
-    public function addDemandeurId(CitizenProfile $demandeurId): static
+    public function addDemandeur(CitizenProfile $demandeur): static
     {
-        if (!$this->demandeur_id->contains($demandeurId)) {
-            $this->demandeur_id->add($demandeurId);
-            $demandeurId->setRequest($this);
+        if (!$this->demandeurs->contains($demandeur)) {
+            $this->demandeurs->add($demandeur);
+            $demandeur->addRequest($this);
         }
-
         return $this;
     }
 
-    public function removeDemandeurId(CitizenProfile $demandeurId): static
+    public function removeDemandeur(CitizenProfile $demandeur): static
     {
-        if ($this->demandeur_id->removeElement($demandeurId)) {
-            // set the owning side to null (unless already changed)
-            if ($demandeurId->getRequest() === $this) {
-                $demandeurId->setRequest(null);
-            }
+        if ($this->demandeurs->removeElement($demandeur)) {
+            $demandeur->removeRequest($this);
         }
-
         return $this;
     }
 
@@ -163,7 +146,6 @@ class Request
     public function setStatut(string $statut): static
     {
         $this->statut = $statut;
-
         return $this;
     }
 
@@ -175,7 +157,6 @@ class Request
     public function setCentre(string $centre): static
     {
         $this->centre = $centre;
-
         return $this;
     }
 
@@ -187,7 +168,6 @@ class Request
     public function setPriorite(int $priorite): static
     {
         $this->priorite = $priorite;
-
         return $this;
     }
 
@@ -199,7 +179,6 @@ class Request
     public function setMontant(string $montant): static
     {
         $this->montant = $montant;
-
         return $this;
     }
 
@@ -211,31 +190,28 @@ class Request
     public function setCanal(string $canal): static
     {
         $this->canal = $canal;
-
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTime
+    public function getCreatedAt(): ?\DateTimeImmutable
     {
-        return $this->created_at;
+        return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTime $created_at): static
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
-        $this->created_at = $created_at;
-
+        $this->createdAt = $createdAt;
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTime
+    public function getUpdatedAt(): ?\DateTimeImmutable
     {
-        return $this->updated_at;
+        return $this->updatedAt;
     }
 
-    public function setUpdatedAt(\DateTime $updated_at): static
+    public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
     {
-        $this->updated_at = $updated_at;
-
+        $this->updatedAt = $updatedAt;
         return $this;
     }
 
@@ -247,7 +223,6 @@ class Request
     public function setAttachment(?Attachment $attachment): static
     {
         $this->attachment = $attachment;
-
         return $this;
     }
 
@@ -259,7 +234,6 @@ class Request
     public function setDocument(?Document $document): static
     {
         $this->document = $document;
-
         return $this;
     }
 
@@ -271,7 +245,6 @@ class Request
     public function setTask(?Task $task): static
     {
         $this->task = $task;
-
         return $this;
     }
 
@@ -283,7 +256,6 @@ class Request
     public function setPayment(?Payment $payment): static
     {
         $this->payment = $payment;
-
         return $this;
     }
 
@@ -295,8 +267,6 @@ class Request
     public function setDecision(?Decision $decision): static
     {
         $this->decision = $decision;
-
         return $this;
     }
-
 }
