@@ -1,48 +1,141 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello PièceJointeController!{% endblock %}
+{% block title %}Pièce jointe{% endblock %}
 
 {% block body %}
+
 <style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+   
+
+    .pj-container {
+        background: rgba(100, 60, 60, 0.7); /* brun/marron, opacité 0.7 */
+        border-radius: 12px;
+        max-width: 430px;
+        margin: 3rem auto;
+        padding: 2.2rem 2rem 1rem 2rem;
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.11);
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        font-family: Arial, sans-serif;
+    }
+
+    .pj-container h2 {
+        text-align: center;
+        margin: 0 0 1.2rem 0;
+        color: #111;
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+
+    .pj-container label {
+        margin-top: 1.25em;
+        font-size: 1.07em;
+        color: #fff;
+        font-weight: 600;
+    }
+
+    .pj-container select,
+    .pj-container input[type="text"],
+    .pj-container input[type="file"] {
+        margin-top: 0.35em;
+        border: none;
+        border-radius: 8px;
+        width: 100%;
+        padding: 0.6em 1em;
+        font-size: 1em;
+        background-color: #ddd;
+        box-sizing: border-box;
+        transition: background 0.2s;
+    }
+    .pj-container select:focus,
+    .pj-container input[type="text"]:focus {
+        background: #fffbe6;
+        outline: 2px solid #b6862c;
+    }
+
+    .pj-container input[type="file"] {
+        padding: 0.4em 0.2em;
+        background-color: #eee;
+    }
+
+    .pj-container button {
+        width: 100%;
+        margin-top: 1.8em;
+        padding: 0.65em 0;
+        border: none;
+        border-radius: 8px;
+        background-color: #926214;
+        color: #fff;
+        font-family: inherit;
+        font-weight: bold;
+        letter-spacing: 1px;
+        font-size: 1.14em;
+        cursor: pointer;
+        transition: background 0.2s;
+        box-shadow: 0 2px 8px rgba(50, 30, 0, 0.08);
+    }
+    .pj-container button:hover {
+        background-color: #b6862c;
+    }
+
+    .pj-container .payment-link {
+        display: block;
+        text-align: center;
+        margin-top: 1.5em;
+        color: #1500c1;
+        font-weight: bold;
+        font-size: 1em;
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+    .pj-container .payment-link:hover {
+        text-decoration: underline;
+        color: #e65100;
+    }
+
+    @media (max-width: 600px) {
+        .pj-container {
+            padding: 1em 0.5em;
+            max-width: 97vw;
+        }
+    }
 </style>
 
-<div class="form-container">
+<div class="pj-container">
     <h2>Pièce jointe</h2>
-    <form id="pieceForm">
-      <label for="demande">Demande associée :</label>
-      <select id="demande" required>
-        <option value="">-- Sélectionner --</option>
-        <option value="demande1">Demande 1</option>
-        <option value="demande2">Demande 2</option>
-      </select>
+    <form id="pieceForm" method="POST" enctype="multipart/form-data">
+        <label for="demande">Demande associée :</label>
+        <select id="demande" name="demande" required>
+            <option value="">-- Sélectionner --</option>
+            <option value="demande1">Demande 1</option>
+            <option value="demande2">Demande 2</option>
+        </select>
 
-      <label for="type">Type de pièce :</label>
-      <select id="type" required>
-        <option value="">-- Sélectionner --</option>
-        <option value="carteID">Carte d'identité</option>
-        <option value="justificatif">Justificatif de domicile</option>
-      </select>
+        <label for="type">Type de pièce :</label>
+        <select id="type" name="type_piece" required>
+            <option value="">-- Sélectionner --</option>
+            <option value="carteID">Carte d'identité</option>
+            <option value="justificatif">Justificatif de domicile</option>
+        </select>
 
-      <label for="fichier">Fichier :</label>
-      <input type="file" id="fichier" required>
+        <label for="fichier">Fichier :</label>
+        <input type="file" id="fichier" name="fichier" required>
 
-      <label for="nom">Nom du fichier :</label>
-      <input type="text" id="nom" placeholder="Nom du fichier" required>
+        <label for="nom">Nom du fichier :</label>
+        <input type="text" id="nom" name="nom_fichier" placeholder="Nom du fichier" required>
 
-      <label for="statut">Statut de vérification :</label>
-      <select id="statut" required>
-        <option value="">-- Sélectionner --</option>
-        <option value="en_attente">En attente</option>
-        <option value="valide">Validé</option>
-        <option value="refuse">Refusé</option>
-      </select>
+        <label for="statut">Statut de vérification :</label>
+        <select id="statut" name="verif_statut" required>
+            <option value="">-- Sélectionner --</option>
+            <option value="en_attente">En attente</option>
+            <option value="valide">Validé</option>
+            <option value="refuse">Refusé</option>
+        </select>
 
-      <button type="submit">Enregistrer</button>
+        <button type="submit">Enregistrer</button>
     </form>
     <a href="paiement.html" class="payment-link">Effectuer le paiement</a>
-  </div>
-
+</div>
 
 {% endblock %}
