@@ -3,8 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\DecisionRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -16,11 +14,9 @@ class Decision
     #[ORM\Column]
     private ?int $id = null;
 
-    /**
-     * @var Collection<int, request>
-     */
-    #[ORM\OneToMany(targetEntity: request::class, mappedBy: 'decision')]
-    private Collection $request_id;
+    #[ORM\ManyToOne(targetEntity: Request::class, inversedBy: 'decisions')]
+    #[ORM\JoinColumn(name: "request_id", referencedColumnName: "id", nullable: false)]
+    private ?Request $request = null;
 
     #[ORM\Column(length: 20)]
     private ?string $resultat = null;
@@ -29,50 +25,27 @@ class Decision
     private ?string $motif = null;
 
     #[ORM\Column(length: 100)]
-    private ?string $valide_par = null;
+    private ?string $validePar = null;
 
-    #[ORM\Column]
-    private ?\DateTime $valide_le = null;
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $valideLe = null;
 
-    #[ORM\OneToOne(mappedBy: 'decision_id', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(mappedBy: 'decision', cascade: ['persist', 'remove'])]
     private ?Signature $signature = null;
-
-    public function __construct()
-    {
-        $this->request_id = new ArrayCollection();
-    }
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return Collection<int, request>
-     */
-    public function getRequestId(): Collection
+    public function getRequest(): ?Request
     {
-        return $this->request_id;
+        return $this->request;
     }
 
-    public function addRequestId(request $requestId): static
+    public function setRequest(?Request $request): static
     {
-        if (!$this->request_id->contains($requestId)) {
-            $this->request_id->add($requestId);
-            $requestId->setDecision($this);
-        }
-
-        return $this;
-    }
-
-    public function removeRequestId(request $requestId): static
-    {
-        if ($this->request_id->removeElement($requestId)) {
-            // set the owning side to null (unless already changed)
-            if ($requestId->getDecision() === $this) {
-                $requestId->setDecision(null);
-            }
-        }
+        $this->request = $request;
 
         return $this;
     }
@@ -103,24 +76,24 @@ class Decision
 
     public function getValidePar(): ?string
     {
-        return $this->valide_par;
+        return $this->validePar;
     }
 
-    public function setValidePar(string $valide_par): static
+    public function setValidePar(string $validePar): static
     {
-        $this->valide_par = $valide_par;
+        $this->validePar = $validePar;
 
         return $this;
     }
 
-    public function getValideLe(): ?\DateTime
+    public function getValideLe(): ?\DateTimeInterface
     {
-        return $this->valide_le;
+        return $this->valideLe;
     }
 
-    public function setValideLe(\DateTime $valide_le): static
+    public function setValideLe(\DateTimeInterface $valideLe): static
     {
-        $this->valide_le = $valide_le;
+        $this->valideLe = $valideLe;
 
         return $this;
     }
@@ -132,9 +105,8 @@ class Decision
 
     public function setSignature(Signature $signature): static
     {
-        // set the owning side of the relation if necessary
-        if ($signature->getDecisionId() !== $this) {
-            $signature->setDecisionId($this);
+        if ($signature->getDecision() !== $this) {
+            $signature->setDecision($this);
         }
 
         $this->signature = $signature;
