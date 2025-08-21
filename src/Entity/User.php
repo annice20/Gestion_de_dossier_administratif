@@ -58,6 +58,14 @@ class User
     #[ORM\OneToOne(mappedBy: 'user_id', cascade: ['persist', 'remove'])]
     private ?CodeValidation $codeValidation = null;
 
+    #[ORM\ManyToOne(inversedBy: 'assigne_a')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Task $task = null;
+
+    #[ORM\ManyToOne(inversedBy: 'user_id')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?AuditLog $auditLog = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -237,6 +245,30 @@ class User
         }
 
         $this->codeValidation = $codeValidation;
+
+        return $this;
+    }
+
+    public function getTask(): ?Task
+    {
+        return $this->task;
+    }
+
+    public function setTask(?Task $task): static
+    {
+        $this->task = $task;
+
+        return $this;
+    }
+
+    public function getAuditLog(): ?AuditLog
+    {
+        return $this->auditLog;
+    }
+
+    public function setAuditLog(?AuditLog $auditLog): static
+    {
+        $this->auditLog = $auditLog;
 
         return $this;
     }

@@ -36,6 +36,7 @@ class RequestType
     #[ORM\JoinColumn(nullable: false)]
     private ?Request $request = null;
 
+
     public function getId(): ?int
     {
         return $this->id;

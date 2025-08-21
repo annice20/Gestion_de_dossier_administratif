@@ -36,6 +36,10 @@ class CitizenProfile
     #[ORM\Column(length: 50)]
     private ?string $commune = null;
 
+    #[ORM\ManyToOne(inversedBy: 'demandeur_id')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Request $request = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -121,6 +125,18 @@ class CitizenProfile
     public function setCommune(string $commune): static
     {
         $this->commune = $commune;
+
+        return $this;
+    }
+
+    public function getRequest(): ?Request
+    {
+        return $this->request;
+    }
+
+    public function setRequest(?Request $request): static
+    {
+        $this->request = $request;
 
         return $this;
     }
