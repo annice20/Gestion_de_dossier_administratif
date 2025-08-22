@@ -2,7 +2,7 @@
 
 namespace App\Form;
 
-use App\Entity\User;
+use App\Entity\CitizenProfile;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -17,7 +17,7 @@ class ProfilType extends AbstractType
             ->add('nom', TextType::class, [
                 'label' => 'Nom'
             ])
-            ->add('prenom', TextType::class, [
+            ->add('prenoms', TextType::class, [
                 'label' => 'Prénom'
             ])
             ->add('dateDeNaissance', DateType::class, [
@@ -26,7 +26,7 @@ class ProfilType extends AbstractType
                 'html5' => false,
                 'format' => 'dd/MM/yyyy'
             ])
-            ->add('numeroCIN', TextType::class, [
+            ->add('nin', TextType::class, [
                 'label' => 'Numéro CIN'
             ])
             ->add('adresse', TextType::class, [
@@ -41,7 +41,7 @@ class ProfilType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => User::class,
+            'data_class' => CitizenProfile::class,
         ]);
     }
 }

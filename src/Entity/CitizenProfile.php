@@ -7,6 +7,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CitizenProfileRepository::class)]
+#[ORM\Table(name: 'citizen_profile')]
 class CitizenProfile
 {
     #[ORM\Id]
@@ -14,9 +15,9 @@ class CitizenProfile
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\OneToOne(inversedBy: 'citizenProfile', cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?User $user_id = null;
+    #[ORM\OneToOne]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false, unique: true)]
+    private ?User $user = null;
 
     #[ORM\Column(length: 50)]
     private ?string $nom = null;
@@ -24,11 +25,11 @@ class CitizenProfile
     #[ORM\Column(length: 50)]
     private ?string $prenoms = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTime $Date_de_naissance = null;
+    #[ORM\Column(type: Types::DATE_MUTABLE, name: 'date_de_naissance')]
+    private ?\DateTimeInterface $dateDeNaissance = null;
 
-    #[ORM\Column(length: 20)]
-    private ?string $NIN = null;
+    #[ORM\Column(length: 20, name: 'nin')]
+    private ?string $nin = null;
 
     #[ORM\Column(length: 150)]
     private ?string $adresse = null;
@@ -36,24 +37,23 @@ class CitizenProfile
     #[ORM\Column(length: 50)]
     private ?string $commune = null;
 
-    #[ORM\ManyToOne(inversedBy: 'demandeur_id')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Request $request = null;
+    // ===========================
+    // Getters et Setters
+    // ===========================
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getUserId(): ?User
+    public function getUser(): ?User
     {
-        return $this->user_id;
+        return $this->user;
     }
 
-    public function setUserId(User $user_id): static
+    public function setUser(User $user): static
     {
-        $this->user_id = $user_id;
-
+        $this->user = $user;
         return $this;
     }
 
@@ -65,7 +65,6 @@ class CitizenProfile
     public function setNom(string $nom): static
     {
         $this->nom = $nom;
-
         return $this;
     }
 
@@ -77,31 +76,28 @@ class CitizenProfile
     public function setPrenoms(string $prenoms): static
     {
         $this->prenoms = $prenoms;
-
         return $this;
     }
 
-    public function getDateDeNaissance(): ?\DateTime
+    public function getDateDeNaissance(): ?\DateTimeInterface
     {
-        return $this->Date_de_naissance;
+        return $this->dateDeNaissance;
     }
 
-    public function setDateDeNaissance(\DateTime $Date_de_naissance): static
+    public function setDateDeNaissance(\DateTimeInterface $dateDeNaissance): static
     {
-        $this->Date_de_naissance = $Date_de_naissance;
-
+        $this->dateDeNaissance = $dateDeNaissance;
         return $this;
     }
 
-    public function getNIN(): ?string
+    public function getNin(): ?string
     {
-        return $this->NIN;
+        return $this->nin;
     }
 
-    public function setNIN(string $NIN): static
+    public function setNin(string $nin): static
     {
-        $this->NIN = $NIN;
-
+        $this->nin = $nin;
         return $this;
     }
 
@@ -113,7 +109,6 @@ class CitizenProfile
     public function setAdresse(string $adresse): static
     {
         $this->adresse = $adresse;
-
         return $this;
     }
 
@@ -125,19 +120,6 @@ class CitizenProfile
     public function setCommune(string $commune): static
     {
         $this->commune = $commune;
-
-        return $this;
-    }
-
-    public function getRequest(): ?Request
-    {
-        return $this->request;
-    }
-
-    public function setRequest(?Request $request): static
-    {
-        $this->request = $request;
-
         return $this;
     }
 }

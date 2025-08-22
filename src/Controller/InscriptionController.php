@@ -4,7 +4,9 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\UserRole;
+use App\Entity\CitizenProfile;
 use App\Form\InscriptionType;
+use App\Form\ProfilType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,11 +26,18 @@ class InscriptionController extends AbstractController
         MailerInterface $mailer
     ): Response
     {
+        // === Formulaire User ===
         $user = new User();
-        $form = $this->createForm(InscriptionType::class, $user);
-        $form->handleRequest($request);
+        $formInscription = $this->createForm(InscriptionType::class, $user);
+        $formInscription->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        // === Formulaire CitizenProfile ===
+        $citizen = new CitizenProfile();
+        $formProfil = $this->createForm(ProfilType::class, $citizen);
+        $formProfil->handleRequest($request);
+
+        // === Gestion du formulaire Inscription ===
+        if ($formInscription->isSubmitted() && $formInscription->isValid()) {
 
             // Hasher le mot de passe
             $hashedPassword = $passwordHasher->hashPassword($user, $user->getHashMdp());
@@ -36,14 +45,14 @@ class InscriptionController extends AbstractController
 
             // Initialiser d'autres champs
             $user->setStatut('actif');
-            $user->setTwoFaenabled(false);
+            $user->setTwoFAEnabled(false);
             $user->setCreatedAt(new \DateTime());
 
             $entityManager->persist($user);
             $entityManager->flush(); // Persister User pour avoir un ID
 
             // Créer la relation UserRole
-            $roleSelected = $form->get('roles')->getData();
+            $roleSelected = $formInscription->get('roles')->getData();
             if ($roleSelected) {
                 $userRole = new UserRole();
                 $userRole->setUser($user);
@@ -68,11 +77,31 @@ class InscriptionController extends AbstractController
 
             $this->addFlash('success', 'Inscription réussie ! Un code de validation a été envoyé par e-mail.');
 
+            // Lier le profil au nouvel utilisateur si le formulaire profil est rempli
+            if ($formProfil->isSubmitted() && $formProfil->isValid()) {
+                $citizen->setUserId($user);
+                $entityManager->persist($citizen);
+                $entityManager->flush();
+                $this->addFlash('success', 'Votre profil a été enregistré avec succès !');
+            }
+
             return $this->redirectToRoute('app_inscription');
         }
 
+        // === Gestion du formulaire Profil si uniquement profil soumis ===
+        if ($formProfil->isSubmitted() && $formProfil->isValid()) {
+            // Ici on pourrait associer à un utilisateur existant si nécessaire
+            $entityManager->persist($citizen);
+            $entityManager->flush();
+            $this->addFlash('success', 'Votre profil a été mis à jour avec succès !');
+
+            return $this->redirectToRoute('app_inscription');
+        }
+
+        // Rendu Twig avec les deux formulaires
         return $this->render('inscription/index.html.twig', [
-            'formInscription' => $form->createView(),
+            'formInscription' => $formInscription->createView(),
+            'formProfil' => $formProfil->createView(),
         ]);
     }
 }

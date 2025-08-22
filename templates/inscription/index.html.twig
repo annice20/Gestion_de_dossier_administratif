@@ -1,5 +1,3 @@
-{# templates/registration/index.html.twig #}
-
 {% extends 'couvre.html.twig' %}
 
 {% block title %}Inscription & Profil{% endblock %}
@@ -36,6 +34,44 @@
                 </div>
                 <button type="submit" class="btn btn-inscription">S'inscrire</button>
             {{ form_end(formInscription) }}
+        </div>
+
+        {# Section Profil #}
+        <div class="form-card">
+            <h2 class="form-title">Profil</h2>
+            {{ form_start(formProfil) }}
+                {# Nom et Prénom #}
+                <div class="form-group-inline">
+                    <div class="form-field-row" >
+                        {{ form_widget(formProfil.nom, {'attr': {'placeholder': 'Nom'}}) }}
+                    </div>
+                    <div class="form-field-row">
+                        {{ form_widget(formProfil.prenoms, {'attr': {'placeholder': 'Prénom'}}) }}
+                    </div>
+                </div>
+                {# Date de naissance #}
+                <div class="form-field-row" style="margin-top: 10px;">
+                    {{ form_label(formProfil.dateDeNaissance, 'Date de naissance :') }}
+                    {{ form_widget(formProfil.dateDeNaissance, {'attr': {'placeholder': 'dd / mm / yyyy'}}) }}
+                </div>
+                {# Numéro CIN #}
+                <div class="form-field-row">
+                    {{ form_label(formProfil.nin, 'Numéro CIN :') }}
+                    {{ form_widget(formProfil.nin) }}
+                </div>
+                {# Adresse et Lot #}
+                <div class="form-field-row">
+                    {{ form_label(formProfil.adresse, 'Adresse :') }}
+                    {{ form_widget(formProfil.adresse, {'attr': {'placeholder': 'Lot'}}) }}
+        
+                </div>
+                {# Commune #}
+                <div class="form-field-row">
+                    {{ form_label(formProfil.commune, 'Commune :') }}
+                    {{ form_widget(formProfil.commune, {'attr': {'placeholder': 'à'}}) }}
+                </div>
+                <button type="submit" class="btn btn-creer" >Créer</button>
+            {{ form_end(formProfil) }}
         </div>
     </div>
 {% endblock %}
