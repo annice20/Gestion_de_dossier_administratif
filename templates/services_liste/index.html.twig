@@ -1,18 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello ServicesListeController!{% endblock %}
+{% block title %}Liste des Services{% endblock %}
 
 {% block body %}
-
-</head>
-
     <div class="container2">
-       
-
         <div class="service-table">
-         <div class="header2">
-            <h1>LISTE DES SERVICES</h1>
-        </div>
+            <div class="header2">
+                <h1>LISTE DES SERVICES</h1>
+            </div>
             <table class="table table-bordered">
                 <thead>
                     <tr>
@@ -52,72 +47,95 @@
                 </tbody>
             </table>
         </div>
+
         <div class="demande-section">
-           
-            
             <div class="demande-header">
                 <h1>DEMANDE</h1>
             </div>
-            
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <label class="form-label">Ref :</label>
-                    <input type="text" class="form-control">
+
+            {{ form_start(form) }}
+
+            <div class="form-group">
+                <div class="form-field-row ">
+                    {{ form_label(form.ref) }}
+                    {{ form_widget(form.ref, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_errors(form.ref) }}
                 </div>
-                <div class="col-md-6">
-                    <label class="form-label">Demandeur :</label>
-                    <input type="text" class="form-control">
+                <div class="form-field-row ">
+                    {{ form_label(form.demandeurs) }}
+                    {{ form_widget(form.demandeurs, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_errors(form.demandeurs) }}
+                </div>
+            
+
+
+                <div class="form-field-row ">
+                    {{ form_label(form.statut) }}
+                    {{ form_widget(form.statut, {'attr': {'class': 'form-select'}}) }}
+                    {{ form_errors(form.statut) }}
+                </div>
+                <div class="form-field-row ">
+                    {{ form_label(form.centre) }}
+                    {{ form_widget(form.centre, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_errors(form.centre) }}
+                </div>
+            
+
+
+                <div class="form-field-row ">
+                    {{ form_label(form.priorite) }}
+                    {{ form_widget(form.priorite, {'attr': {'class': 'form-select'}}) }}
+                    {{ form_errors(form.priorite) }}
+                </div>
+                <div class="form-field-row ">
+                    {{ form_label(form.montant) }}
+                    {{ form_widget(form.montant, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_errors(form.montant) }}
+                </div>
+            
+
+
+                <div class="form-field-row ">
+                    {{ form_label(form.canal) }}
+                    {{ form_widget(form.canal, {'attr': {'class': 'form-select'}}) }}
+                    {{ form_errors(form.canal) }}
+                </div>
+{#
+                <div class="form-field-row ">
+                    {{ form_label(form.attachment) }}
+                    {{ form_widget(form.attachment, {'attr': {'class': 'form-select'}}) }}
+                    {{ form_errors(form.attachment) }}
+                </div>
+            
+
+
+                <div class="form-field-row ">
+                    {{ form_label(form.document) }}
+                    {{ form_widget(form.document, {'attr': {'class': 'form-select'}}) }}
+                    {{ form_errors(form.document) }}
+                </div>
+                <div class="form-field-row ">
+                    {{ form_label(form.task) }}
+                    {{ form_widget(form.task, {'attr': {'class': 'form-select'}}) }}
+                    {{ form_errors(form.task) }}
+                </div>
+            
+
+                <div class="form-field-row ">
+                    {{ form_label(form.payment) }}
+                    {{ form_widget(form.payment, {'attr': {'class': 'form-select'}}) }}
+                    {{ form_errors(form.payment) }}
+                </div>
+                <div class="form-field-row ">
+                    {{ form_label(form.decision) }}
+                    {{ form_widget(form.decision, {'attr': {'class': 'form-select'}}) }}
+                    {{ form_errors(form.decision) }}
                 </div>
             </div>
-            
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <label class="form-label">Statut :</label>
-                    <select class="form-select">
-                        <option value="">Sélectionnez un statut</option>
-                        <option value="nouveau">Nouveau</option>
-                        <option value="en-cours">En cours</option>
-                        <option value="traite">Traité</option>
-                    </select>
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label">Centre :</label>
-                    <input type="text" class="form-control">
-                </div>
-            </div>
-            
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <label class="form-label">Priorité :</label>
-                    <select class="form-select">
-                        <option value="">Sélectionnez une priorité</option>
-                        <option value="normale">Normale</option>
-                        <option value="urgente">Urgente</option>
-                    </select>
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label">Montant :</label>
-                    <input type="number" class="form-control">
-                </div>
-            </div>
-            
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <label class="form-label">Canal :</label>
-                    <select class="form-select">
-                        <option value="">Sélectionnez un canal</option>
-                        <option value="en-ligne">En ligne</option>
-                        <option value="guichet">Guichet</option>
-                        <option value="telephone">Téléphone</option>
-                    </select>
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label">Pièce jointe :</label>
-                    <input type="file" class="form-control">
-                </div>
-            </div>
-            
-            <button class="btn-valider">Valider</button>
+#}
+            <button type="submit" class="btn btn-primary">Valider</button>
+
+            {{ form_end(form) }}
         </div>
     </div>
 {% endblock %}

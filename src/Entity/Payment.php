@@ -3,8 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\PaymentRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -15,13 +13,10 @@ class Payment
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-
-    /**
-     * @var Collection<int, Request>
-     */
-    #[ORM\OneToMany(targetEntity: Request::class, mappedBy: 'payment')]
-    private Collection $request_id;
-
+    
+    #[ORM\ManyToOne(targetEntity: Request::class, inversedBy: 'payments')]
+    private ?Request $request = null;
+    
     #[ORM\Column(length: 20)]
     private ?string $mode = null;
 
@@ -37,46 +32,24 @@ class Payment
     #[ORM\Column(type: Types::TEXT)]
     private ?string $recu_url = null;
 
-    public function __construct()
-    {
-        $this->request_id = new ArrayCollection();
-    }
-
     public function getId(): ?int
     {
         return $this->id;
     }
-
-    /**
-     * @return Collection<int, Request>
-     */
-    public function getRequestId(): Collection
+    
+    public function getRequest(): ?Request
     {
-        return $this->request_id;
+        return $this->request;
     }
 
-    public function addRequestId(Request $requestId): static
+    public function setRequest(?Request $request): static
     {
-        if (!$this->request_id->contains($requestId)) {
-            $this->request_id->add($requestId);
-            $requestId->setPayment($this);
-        }
+        $this->request = $request;
 
         return $this;
     }
-
-    public function removeRequestId(Request $requestId): static
-    {
-        if ($this->request_id->removeElement($requestId)) {
-            // set the owning side to null (unless already changed)
-            if ($requestId->getPayment() === $this) {
-                $requestId->setPayment(null);
-            }
-        }
-
-        return $this;
-    }
-
+    
+    // Les autres méthodes de votre entité
     public function getMode(): ?string
     {
         return $this->mode;
@@ -85,7 +58,6 @@ class Payment
     public function setMode(string $mode): static
     {
         $this->mode = $mode;
-
         return $this;
     }
 
@@ -97,7 +69,6 @@ class Payment
     public function setReference(string $reference): static
     {
         $this->reference = $reference;
-
         return $this;
     }
 
@@ -109,7 +80,6 @@ class Payment
     public function setMontant(string $montant): static
     {
         $this->montant = $montant;
-
         return $this;
     }
 
@@ -121,7 +91,6 @@ class Payment
     public function setStatut(string $statut): static
     {
         $this->statut = $statut;
-
         return $this;
     }
 
@@ -133,7 +102,6 @@ class Payment
     public function setRecuUrl(string $recu_url): static
     {
         $this->recu_url = $recu_url;
-
         return $this;
     }
 }

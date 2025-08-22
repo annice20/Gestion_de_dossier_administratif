@@ -1,7 +1,5 @@
 body {
     margin: 0;
-    height: 100vh;
-    width: 100vw;
     background-image: url('../images/1.png');
     background-repeat: no-repeat;
     background-position: center;
@@ -108,59 +106,74 @@ body {
 
 
 /*Pièce joint*/
-.form-container {
-    width: 550px;
-    height: 700px;
-    margin: 50px auto;
-    background: #ddb2b1;
-    padding: 20px;
-    border-radius: 8px;
-    color: rgb(5, 3, 3);
-  }
-  
-  .form-container h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    
-  }
-  
-  label {
-    display: block;
-    margin: 10px 0 5px;
-  }
-  
-  select, input[type="text"], input[type="file"] {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 15px;
-    border-radius: 5px;
-    border: none;
-  }
-  
-  button {
-    width: 100%;
-    padding: 10px;
-    background: #a9742a;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-weight: bold;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background: #8a5f1f;
-  }
-  
-  .payment-link {
-    display: block;
-    text-align: center;
-    margin-top: 10px;
-    color: #0000ff;
-    text-decoration: none;
-    font-weight: bold;
-  }
-
+.pj-container {
+        background: rgba(100, 60, 60, 0.7);
+        border-radius: 12px;
+        max-width: 430px;
+        margin: 3rem auto;
+        padding: 2.2rem 2rem 1rem 2rem;
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.11);
+        font-family: Arial, sans-serif;
+    }
+    .pj-container h2 {
+        text-align: center;
+        margin: 0 0 1.2rem 0;
+        color: #111;
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+    label {
+        margin-top: 1.25em;
+        font-size: 1.07em;
+        color: #fff;
+        font-weight: 600;
+        display: block;
+    }
+    select, input[type="text"], input[type="file"] {
+        margin-top: 0.35em;
+        border: none;
+        border-radius: 8px;
+        width: 100%;
+        padding: 0.6em 1em;
+        font-size: 1em;
+        background-color: #ddd;
+        box-sizing: border-box;
+        transition: background 0.2s;
+    }
+    select:focus, input[type="text"]:focus {
+        background: #fffbe6;
+        outline: 2px solid #b6862c;
+    }
+    button {
+        width: 100%;
+        margin-top: 1.8em;
+        padding: 0.65em 0;
+        border: none;
+        border-radius: 8px;
+        background-color: #926214;
+        color: #fff;
+        font-weight: bold;
+        font-size: 1.14em;
+        cursor: pointer;
+        transition: background 0.2s;
+        box-shadow: 0 2px 8px rgba(50, 30, 0, 0.08);
+    }
+    button:hover {
+        background-color: #b6862c;
+    }
+    .payment-link {
+        display: block;
+        text-align: center;
+        margin-top: 1.5em;
+        color: #1500c1;
+        font-weight: bold;
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+    .payment-link:hover {
+        color: #e65100;
+        text-decoration: underline;
+    }
   
 /*inscription et profil*/          
 .container-main {
@@ -270,12 +283,12 @@ body {
             padding: 15px;
             border: none;
             border-radius: 10px;
-            color: white;
+            color: rgb(225, 215, 215);
             font-size: 18px;
             font-weight: bold;
             cursor: pointer;
             margin-top: 20px;
-            margin-left: 25%;
+            /* margin-left: 25%; */
         }
         .btn-inscription {
             background-color: #6d0a07; /* Rouge */
@@ -366,7 +379,7 @@ body {
     border-radius: 5px;
     margin-bottom: 20px;
     box-sizing: border-box; /* Pour que le padding ne s'ajoute pas à la largeur */
-} */
+}
 
 input[type="submit"] {
     cursor: pointer;
@@ -401,3 +414,4 @@ input[type="submit"] {
 /* Pour SignatureFormType.php, pour le bouton saveSignature: */
 /* ->add('saveSignature', SubmitType::class, ['label' => 'Enregistrer la signature', 'attr' => ['class' => 'btn-blue']]) */
    
+

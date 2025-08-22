@@ -1,0 +1,102 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Payment{% endblock %}
+
+{% block body %}
+    <style>
+        .card {
+            width: 50%;
+            margin: auto;
+            margin-top: 20px;
+            background-color: #D9D9D9;
+            border-radius: 12px;
+            padding: 2rem;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .savepayment {
+            border: none;
+            background-color: #A7690B;
+            width: 45%;
+            height: 50px;
+            border-radius: 15px;
+        }
+    </style>
+
+    <h1 class="mt-5">Paiement</h1>
+    <div class="card">
+        <div class="card-body">
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-success">
+                    {{ message }}
+                </div>
+            {% endfor %}
+            {{ form_start(form) }}
+                <div class="row mb-3">
+                    {{ form_label(form.request, null, {
+                        'label_attr': {'class': 'col-sm-2 col-form-label text-end'}
+                    }) }}
+                    <div class="col-sm-10">
+                        {{ form_widget(form.request, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    {{ form_label(form.mode, null, {
+                        'label_attr': {'class': 'col-sm-2 col-form-label text-end'}
+                    }) }}
+                    <div class="col-sm-10">
+                        {{ form_widget(form.mode, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+                
+                <div class="row mb-3">
+                    {{ form_label(form.reference, null, {
+                        'label_attr': {'class': 'col-sm-2 col-form-label text-end'}
+                    }) }}
+                    <div class="col-sm-10">
+                        {{ form_widget(form.reference, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    {{ form_label(form.montant, null, {
+                        'label_attr': {'class': 'col-sm-2 col-form-label text-end'}
+                    }) }}
+                    <div class="col-sm-10">
+                        {{ form_widget(form.montant, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    {{ form_label(form.statut, null, {
+                        'label_attr': {'class': 'col-sm-2 col-form-label text-end'}
+                    }) }}
+                    <div class="col-sm-10">
+                        {{ form_widget(form.statut, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    {{ form_label(form.recu_url, null, {
+                        'label_attr': {'class': 'col-sm-2 col-form-label text-end'}
+                    }) }}
+                    <div class="col-sm-10">
+                        {{ form_widget(form.recu_url, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <button class="savepayment mt-3">
+                        {{ button_label|default('Enregistrer') }}
+                    </button>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

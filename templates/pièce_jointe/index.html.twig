@@ -1,48 +1,30 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello PièceJointeController!{% endblock %}
+{% block title %}Pièce jointe{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 
-<div class="form-container">
+<div class="pj-container">
     <h2>Pièce jointe</h2>
-    <form id="pieceForm">
-      <label for="demande">Demande associée :</label>
-      <select id="demande" required>
-        <option value="">-- Sélectionner --</option>
-        <option value="demande1">Demande 1</option>
-        <option value="demande2">Demande 2</option>
-      </select>
 
-      <label for="type">Type de pièce :</label>
-      <select id="type" required>
-        <option value="">-- Sélectionner --</option>
-        <option value="carteID">Carte d'identité</option>
-        <option value="justificatif">Justificatif de domicile</option>
-      </select>
+    {{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
 
-      <label for="fichier">Fichier :</label>
-      <input type="file" id="fichier" required>
+    {{ form_row(form.type_piece) }}
 
-      <label for="nom">Nom du fichier :</label>
-      <input type="text" id="nom" placeholder="Nom du fichier" required>
+    {{ form_row(form.nom_fichier) }}
 
-      <label for="statut">Statut de vérification :</label>
-      <select id="statut" required>
-        <option value="">-- Sélectionner --</option>
-        <option value="en_attente">En attente</option>
-        <option value="valide">Validé</option>
-        <option value="refuse">Refusé</option>
-      </select>
+    {{ form_row(form.hash) }}
 
-      <button type="submit">Enregistrer</button>
-    </form>
+    {{ form_row(form.url) }}
+
+    {{ form_row(form.taille) }}
+
+    {{ form_row(form.verif_statut) }}
+
+    <button type="submit">Enregistrer</button>
+
+    {{ form_end(form) }}
+
     <a href="paiement.html" class="payment-link">Effectuer le paiement</a>
-  </div>
-
-
+</div>
 {% endblock %}
