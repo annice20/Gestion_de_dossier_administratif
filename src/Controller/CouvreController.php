@@ -8,7 +8,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class CouvreController extends AbstractController
 {
-    #[Route('/couvre', name: 'app_couvre')]
+    #[Route('/', name: 'app_couvre')]
     public function index(): Response
     {
         return $this->render('couvre/index.html.twig', [
