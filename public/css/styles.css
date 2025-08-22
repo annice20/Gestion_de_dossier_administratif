@@ -393,11 +393,11 @@ input[type="submit"] {
 
 /* Styles des boutons de soumission */
 .btn-primary { /* Bouton Enregistrer (Décision) */
-    background-color: var(--btn-orange-bg) !important;
+    /* background-color: var(--btn-orange-bg) !important; */
 }
 
 .btn-primary:hover {
-    background-color: var(--btn-orange-hover) !important;
+    /* background-color: var(--btn-orange-hover) !important; */
 }
 
 .btn-blue { /* Bouton Enregistrer la signature */
