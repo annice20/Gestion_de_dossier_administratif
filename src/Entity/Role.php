@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\RoleRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: RoleRepository::class)]
@@ -19,9 +21,13 @@ class Role
     #[ORM\Column(length: 255)]
     private ?string $libelle = null;
 
-    #[ORM\ManyToOne(inversedBy: 'role_id')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?UserRole $userRole = null;
+    #[ORM\OneToMany(mappedBy: 'role', targetEntity: UserRole::class)]
+    private Collection $userRoles;
+
+    public function __construct()
+    {
+        $this->userRoles = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -36,7 +42,6 @@ class Role
     public function setCode(string $code): static
     {
         $this->code = $code;
-
         return $this;
     }
 
@@ -48,18 +53,34 @@ class Role
     public function setLibelle(string $libelle): static
     {
         $this->libelle = $libelle;
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UserRole>
+     */
+    public function getUserRoles(): Collection
+    {
+        return $this->userRoles;
+    }
+
+    public function addUserRole(UserRole $userRole): static
+    {
+        if (!$this->userRoles->contains($userRole)) {
+            $this->userRoles->add($userRole);
+            $userRole->setRole($this);
+        }
 
         return $this;
     }
 
-    public function getUserRole(): ?UserRole
+    public function removeUserRole(UserRole $userRole): static
     {
-        return $this->userRole;
-    }
-
-    public function setUserRole(?UserRole $userRole): static
-    {
-        $this->userRole = $userRole;
+        if ($this->userRoles->removeElement($userRole)) {
+            if ($userRole->getRole() === $this) {
+                $userRole->setRole(null);
+            }
+        }
 
         return $this;
     }

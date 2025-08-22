@@ -16,11 +16,8 @@ class AuditLog
     #[ORM\Column]
     private ?int $id = null;
 
-    /**
-     * @var Collection<int, User>
-     */
     #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'auditLog')]
-    private Collection $user_id;
+    private Collection $users;
 
     #[ORM\Column(length: 100)]
     private ?string $action = null;
@@ -41,11 +38,11 @@ class AuditLog
     private ?string $user_agent = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTime $date = null;
+    private ?\DateTimeInterface $date = null;
 
     public function __construct()
     {
-        $this->user_id = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -56,27 +53,26 @@ class AuditLog
     /**
      * @return Collection<int, User>
      */
-    public function getUserId(): Collection
+    public function getUsers(): Collection
     {
-        return $this->user_id;
+        return $this->users;
     }
 
-    public function addUserId(User $userId): static
+    public function addUser(User $user): static
     {
-        if (!$this->user_id->contains($userId)) {
-            $this->user_id->add($userId);
-            $userId->setAuditLog($this);
+        if (!$this->users->contains($user)) {
+            $this->users->add($user);
+            $user->setAuditLog($this);
         }
 
         return $this;
     }
 
-    public function removeUserId(User $userId): static
+    public function removeUser(User $user): static
     {
-        if ($this->user_id->removeElement($userId)) {
-            // set the owning side to null (unless already changed)
-            if ($userId->getAuditLog() === $this) {
-                $userId->setAuditLog(null);
+        if ($this->users->removeElement($user)) {
+            if ($user->getAuditLog() === $this) {
+                $user->setAuditLog(null);
             }
         }
 
@@ -91,7 +87,6 @@ class AuditLog
     public function setAction(string $action): static
     {
         $this->action = $action;
-
         return $this;
     }
 
@@ -103,7 +98,6 @@ class AuditLog
     public function setEntite(string $entite): static
     {
         $this->entite = $entite;
-
         return $this;
     }
 
@@ -115,7 +109,6 @@ class AuditLog
     public function setAvant(string $avant): static
     {
         $this->avant = $avant;
-
         return $this;
     }
 
@@ -127,7 +120,6 @@ class AuditLog
     public function setApres(string $apres): static
     {
         $this->apres = $apres;
-
         return $this;
     }
 
@@ -139,7 +131,6 @@ class AuditLog
     public function setIp(string $ip): static
     {
         $this->ip = $ip;
-
         return $this;
     }
 
@@ -151,19 +142,17 @@ class AuditLog
     public function setUserAgent(string $user_agent): static
     {
         $this->user_agent = $user_agent;
-
         return $this;
     }
 
-    public function getDate(): ?\DateTime
+    public function getDate(): ?\DateTimeInterface
     {
         return $this->date;
     }
 
-    public function setDate(\DateTime $date): static
+    public function setDate(\DateTimeInterface $date): static
     {
         $this->date = $date;
-
         return $this;
     }
 }

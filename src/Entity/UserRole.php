@@ -3,8 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\UserRoleRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: UserRoleRepository::class)]
@@ -15,89 +13,41 @@ class UserRole
     #[ORM\Column]
     private ?int $id = null;
 
-    /**
-     * @var Collection<int, User>
-     */
-    #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'userRole')]
-    private Collection $user_id;
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'userRoles')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
 
-    /**
-     * @var Collection<int, Role>
-     */
-    #[ORM\OneToMany(targetEntity: Role::class, mappedBy: 'userRole')]
-    private Collection $role_id;
+    #[ORM\ManyToOne(targetEntity: Role::class, inversedBy: 'userRoles')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Role $role = null;
 
     #[ORM\Column(length: 50)]
     private ?string $portee = null;
-
-    public function __construct()
-    {
-        $this->user_id = new ArrayCollection();
-        $this->role_id = new ArrayCollection();
-    }
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return Collection<int, User>
-     */
-    public function getUserId(): Collection
+    public function getUser(): ?User
     {
-        return $this->user_id;
+        return $this->user;
     }
 
-    public function addUserId(User $userId): static
+    public function setUser(?User $user): static
     {
-        if (!$this->user_id->contains($userId)) {
-            $this->user_id->add($userId);
-            $userId->setUserRole($this);
-        }
-
+        $this->user = $user;
         return $this;
     }
 
-    public function removeUserId(User $userId): static
+    public function getRole(): ?Role
     {
-        if ($this->user_id->removeElement($userId)) {
-            // set the owning side to null (unless already changed)
-            if ($userId->getUserRole() === $this) {
-                $userId->setUserRole(null);
-            }
-        }
-
-        return $this;
+        return $this->role;
     }
 
-    /**
-     * @return Collection<int, Role>
-     */
-    public function getRoleId(): Collection
+    public function setRole(?Role $role): static
     {
-        return $this->role_id;
-    }
-
-    public function addRoleId(Role $roleId): static
-    {
-        if (!$this->role_id->contains($roleId)) {
-            $this->role_id->add($roleId);
-            $roleId->setUserRole($this);
-        }
-
-        return $this;
-    }
-
-    public function removeRoleId(Role $roleId): static
-    {
-        if ($this->role_id->removeElement($roleId)) {
-            // set the owning side to null (unless already changed)
-            if ($roleId->getUserRole() === $this) {
-                $roleId->setUserRole(null);
-            }
-        }
-
+        $this->role = $role;
         return $this;
     }
 
@@ -109,7 +59,6 @@ class UserRole
     public function setPortee(string $portee): static
     {
         $this->portee = $portee;
-
         return $this;
     }
 }

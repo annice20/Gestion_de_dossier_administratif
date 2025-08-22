@@ -5,10 +5,12 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-class User
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -19,52 +21,28 @@ class User
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $password = null;
+    private ?string $hashMdp = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $nom = null;
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $statut = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $prenom = null;
-
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTime $dateDeNaissance = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $numeroCIN = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $adresse = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $lot = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $commune = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $langue = null;
-
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $telephone = null;
 
-    #[ORM\ManyToOne(inversedBy: 'user_id')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?UserRole $userRole = null;
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $langue = null;
 
-    #[ORM\OneToOne(mappedBy: 'user_id', cascade: ['persist', 'remove'])]
-    private ?CitizenProfile $citizenProfile = null;
+    #[ORM\Column(type: 'boolean')]
+    private bool $twoFAEnabled = false;
 
-    #[ORM\OneToOne(mappedBy: 'user_id', cascade: ['persist', 'remove'])]
-    private ?CodeValidation $codeValidation = null;
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $createdAt = null;
 
-    #[ORM\ManyToOne(inversedBy: 'assigne_a')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Task $task = null;
-
-    #[ORM\ManyToOne(inversedBy: 'user_id')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?AuditLog $auditLog = null;
+    public function __construct()
+    {
+        $this->createdAt = new \DateTimeImmutable();
+        $this->twoFAEnabled = false;
+    }
 
     public function getId(): ?int
     {
@@ -79,115 +57,28 @@ class User
     public function setEmail(string $email): static
     {
         $this->email = $email;
-
         return $this;
     }
 
-    public function getPassword(): ?string
+    public function getHashMdp(): ?string
     {
-        return $this->password;
+        return $this->hashMdp;
     }
 
-    public function setPassword(string $password): static
+    public function setHashMdp(string $hashMdp): static
     {
-        $this->password = $password;
-
+        $this->hashMdp = $hashMdp;
         return $this;
     }
 
-    public function getNom(): ?string
+    public function getStatut(): ?string
     {
-        return $this->nom;
+        return $this->statut;
     }
 
-    public function setNom(string $nom): static
+    public function setStatut(?string $statut): static
     {
-        $this->nom = $nom;
-
-        return $this;
-    }
-
-    public function getPrenom(): ?string
-    {
-        return $this->prenom;
-    }
-
-    public function setPrenom(string $prenom): static
-    {
-        $this->prenom = $prenom;
-
-        return $this;
-    }
-
-    public function getDateDeNaissance(): ?\DateTime
-    {
-        return $this->dateDeNaissance;
-    }
-
-    public function setDateDeNaissance(\DateTime $dateDeNaissance): static
-    {
-        $this->dateDeNaissance = $dateDeNaissance;
-
-        return $this;
-    }
-
-    public function getNumeroCIN(): ?string
-    {
-        return $this->numeroCIN;
-    }
-
-    public function setNumeroCIN(string $numeroCIN): static
-    {
-        $this->numeroCIN = $numeroCIN;
-
-        return $this;
-    }
-
-    public function getAdresse(): ?string
-    {
-        return $this->adresse;
-    }
-
-    public function setAdresse(string $adresse): static
-    {
-        $this->adresse = $adresse;
-
-        return $this;
-    }
-
-    public function getLot(): ?string
-    {
-        return $this->lot;
-    }
-
-    public function setLot(string $lot): static
-    {
-        $this->lot = $lot;
-
-        return $this;
-    }
-
-    public function getCommune(): ?string
-    {
-        return $this->commune;
-    }
-
-    public function setCommune(string $commune): static
-    {
-        $this->commune = $commune;
-
-        return $this;
-    }
-
-    public function getLangue(): ?string
-    {
-        return $this->langue;
-    }
-
-    public function setLangue(string $langue): static
-    {
-        $this->langue = $langue;
-
+        $this->statut = $statut;
         return $this;
     }
 
@@ -196,80 +87,67 @@ class User
         return $this->telephone;
     }
 
-    public function setTelephone(string $telephone): static
+    public function setTelephone(?string $telephone): static
     {
         $this->telephone = $telephone;
-
         return $this;
     }
 
-    public function getUserRole(): ?UserRole
+    public function getLangue(): ?string
     {
-        return $this->userRole;
+        return $this->langue;
     }
 
-    public function setUserRole(?UserRole $userRole): static
+    public function setLangue(?string $langue): static
     {
-        $this->userRole = $userRole;
-
+        $this->langue = $langue;
         return $this;
     }
 
-    public function getCitizenProfile(): ?CitizenProfile
+    public function isTwoFAEnabled(): bool
     {
-        return $this->citizenProfile;
+        return $this->twoFAEnabled;
     }
 
-    public function setCitizenProfile(CitizenProfile $citizenProfile): static
+    public function setTwoFAEnabled(bool $twoFAEnabled): static
     {
-        // set the owning side of the relation if necessary
-        if ($citizenProfile->getUserId() !== $this) {
-            $citizenProfile->setUserId($this);
-        }
-
-        $this->citizenProfile = $citizenProfile;
-
+        $this->twoFAEnabled = $twoFAEnabled;
         return $this;
     }
 
-    public function getCodeValidation(): ?CodeValidation
+    public function getCreatedAt(): ?\DateTimeInterface
     {
-        return $this->codeValidation;
+        return $this->createdAt;
     }
 
-    public function setCodeValidation(CodeValidation $codeValidation): static
+    public function setCreatedAt(\DateTimeInterface $createdAt): static
     {
-        // set the owning side of the relation if necessary
-        if ($codeValidation->getUserId() !== $this) {
-            $codeValidation->setUserId($this);
-        }
-
-        $this->codeValidation = $codeValidation;
-
+        $this->createdAt = $createdAt;
         return $this;
     }
 
-    public function getTask(): ?Task
+    // ========================================
+    // Méthodes pour UserInterface & PasswordAuthenticatedUserInterface
+    // ========================================
+
+    public function getUserIdentifier(): string
     {
-        return $this->task;
+        return (string) $this->email; // Identifiant pour Symfony
     }
 
-    public function setTask(?Task $task): static
+    public function getPassword(): string
     {
-        $this->task = $task;
-
-        return $this;
+        return (string) $this->hashMdp; // Retourne le mot de passe hashé
     }
 
-    public function getAuditLog(): ?AuditLog
+    public function getRoles(): array
     {
-        return $this->auditLog;
+        // Pour l'instant on retourne un rôle par défaut
+        return ['ROLE_USER'];
     }
 
-    public function setAuditLog(?AuditLog $auditLog): static
+    public function eraseCredentials(): void
     {
-        $this->auditLog = $auditLog;
-
-        return $this;
+        // Si tu stockes des infos sensibles temporairement, les effacer ici
     }
 }

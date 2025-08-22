@@ -16,20 +16,16 @@ class Task
     #[ORM\Column]
     private ?int $id = null;
 
-    /**
-     * @var Collection<int, Request>
-     */
+    // Relation avec Request (OneToMany)
     #[ORM\OneToMany(targetEntity: Request::class, mappedBy: 'task')]
-    private Collection $request_id;
+    private Collection $requests;
 
     #[ORM\Column(length: 50)]
     private ?string $etape = null;
 
-    /**
-     * @var Collection<int, User>
-     */
+    // Relation avec User (OneToMany)
     #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'task')]
-    private Collection $assigne_a;
+    private Collection $assignees;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTime $due_date = null;
@@ -39,8 +35,8 @@ class Task
 
     public function __construct()
     {
-        $this->request_id = new ArrayCollection();
-        $this->assigne_a = new ArrayCollection();
+        $this->requests = new ArrayCollection();
+        $this->assignees = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -48,33 +44,27 @@ class Task
         return $this->id;
     }
 
-    /**
-     * @return Collection<int, Request>
-     */
-    public function getRequestId(): Collection
+    public function getRequests(): Collection
     {
-        return $this->request_id;
+        return $this->requests;
     }
 
-    public function addRequestId(Request $requestId): static
+    public function addRequest(Request $request): static
     {
-        if (!$this->request_id->contains($requestId)) {
-            $this->request_id->add($requestId);
-            $requestId->setTask($this);
+        if (!$this->requests->contains($request)) {
+            $this->requests->add($request);
+            $request->setTask($this);
         }
-
         return $this;
     }
 
-    public function removeRequestId(Request $requestId): static
+    public function removeRequest(Request $request): static
     {
-        if ($this->request_id->removeElement($requestId)) {
-            // set the owning side to null (unless already changed)
-            if ($requestId->getTask() === $this) {
-                $requestId->setTask(null);
+        if ($this->requests->removeElement($request)) {
+            if ($request->getTask() === $this) {
+                $request->setTask(null);
             }
         }
-
         return $this;
     }
 
@@ -86,37 +76,30 @@ class Task
     public function setEtape(string $etape): static
     {
         $this->etape = $etape;
-
         return $this;
     }
 
-    /**
-     * @return Collection<int, User>
-     */
-    public function getAssigneA(): Collection
+    public function getAssignees(): Collection
     {
-        return $this->assigne_a;
+        return $this->assignees;
     }
 
-    public function addAssigneA(User $assigneA): static
+    public function addAssignee(User $user): static
     {
-        if (!$this->assigne_a->contains($assigneA)) {
-            $this->assigne_a->add($assigneA);
-            $assigneA->setTask($this);
+        if (!$this->assignees->contains($user)) {
+            $this->assignees->add($user);
+            $user->setTask($this);
         }
-
         return $this;
     }
 
-    public function removeAssigneA(User $assigneA): static
+    public function removeAssignee(User $user): static
     {
-        if ($this->assigne_a->removeElement($assigneA)) {
-            // set the owning side to null (unless already changed)
-            if ($assigneA->getTask() === $this) {
-                $assigneA->setTask(null);
+        if ($this->assignees->removeElement($user)) {
+            if ($user->getTask() === $this) {
+                $user->setTask(null);
             }
         }
-
         return $this;
     }
 
@@ -128,7 +111,6 @@ class Task
     public function setDueDate(\DateTime $due_date): static
     {
         $this->due_date = $due_date;
-
         return $this;
     }
 
@@ -140,7 +122,6 @@ class Task
     public function setStatut(string $statut): static
     {
         $this->statut = $statut;
-
         return $this;
     }
 }

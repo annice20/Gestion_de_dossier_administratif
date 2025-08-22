@@ -3,6 +3,8 @@
 namespace App\Form;
 
 use App\Entity\User;
+use App\Entity\Role;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -22,11 +24,18 @@ class InscriptionType extends AbstractType
             ->add('telephone', TelType::class, [
                 'label' => 'Entrer votre numéro de téléphone'
             ])
-            ->add('password', PasswordType::class, [
+            ->add('hashMdp', PasswordType::class, [
                 'label' => 'Entrer le mot de passe'
             ])
             ->add('langue', TextType::class, [
                 'label' => 'Langue'
+            ])
+            ->add('roles', EntityType::class, [
+                'class' => Role::class,
+                'choice_label' => 'libelle',
+                'multiple' => false,
+                'mapped' => false,
+                'label' => 'Rôle de l’utilisateur'
             ]);
     }
 
