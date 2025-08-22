@@ -14,8 +14,8 @@ class Signature
     private ?int $id = null;
 
     #[ORM\OneToOne(inversedBy: 'signature', cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Decision $decision_id = null;
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    private ?Decision $decision = null;
 
     #[ORM\Column(length: 20)]
     private ?string $type = null;
@@ -23,22 +23,22 @@ class Signature
     #[ORM\Column(length: 100)]
     private ?string $scelle = null;
 
-    #[ORM\Column]
-    private ?\DateTime $horodatage = null;
+    #[ORM\Column(type: 'datetime_immutable')]
+    private ?\DateTimeImmutable $horodatage = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getDecisionId(): ?Decision
+    public function getDecision(): ?Decision
     {
-        return $this->decision_id;
+        return $this->decision;
     }
 
-    public function setDecisionId(Decision $decision_id): static
+    public function setDecision(Decision $decision): static
     {
-        $this->decision_id = $decision_id;
+        $this->decision = $decision;
 
         return $this;
     }
@@ -67,12 +67,12 @@ class Signature
         return $this;
     }
 
-    public function getHorodatage(): ?\DateTime
+    public function getHorodatage(): ?\DateTimeImmutable
     {
         return $this->horodatage;
     }
 
-    public function setHorodatage(\DateTime $horodatage): static
+    public function setHorodatage(\DateTimeImmutable $horodatage): static
     {
         $this->horodatage = $horodatage;
 
