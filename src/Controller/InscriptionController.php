@@ -5,8 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Entity\UserRole;
 use App\Entity\CitizenProfile;
-use App\Form\InscriptionType;
-use App\Form\ProfilType;
+use App\Form\RegistrationProfilType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,33 +25,28 @@ class InscriptionController extends AbstractController
         MailerInterface $mailer
     ): Response
     {
-        // === Formulaire User ===
-        $user = new User();
-        $formInscription = $this->createForm(InscriptionType::class, $user);
-        $formInscription->handleRequest($request);
+        $form = $this->createForm(RegistrationProfilType::class);
+        $form->handleRequest($request);
 
-        // === Formulaire CitizenProfile ===
-        $citizen = new CitizenProfile();
-        $formProfil = $this->createForm(ProfilType::class, $citizen);
-        $formProfil->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
 
-        // === Gestion du formulaire Inscription ===
-        if ($formInscription->isSubmitted() && $formInscription->isValid()) {
-
-            // Hasher le mot de passe
-            $hashedPassword = $passwordHasher->hashPassword($user, $user->getHashMdp());
+            // Créer l'utilisateur
+            $user = new User();
+            $user->setEmail($data['email']);
+            $hashedPassword = $passwordHasher->hashPassword($user, $data['hashMdp']);
             $user->setHashMdp($hashedPassword);
-
-            // Initialiser d'autres champs
+            $user->setTelephone($data['telephone']);
+            $user->setLangue($data['langue']);
             $user->setStatut('actif');
             $user->setTwoFAEnabled(false);
             $user->setCreatedAt(new \DateTime());
 
             $entityManager->persist($user);
-            $entityManager->flush(); // Persister User pour avoir un ID
+            $entityManager->flush();
 
-            // Créer la relation UserRole
-            $roleSelected = $formInscription->get('roles')->getData();
+            // Créer UserRole si sélectionné
+            $roleSelected = $form->get('roles')->getData();
             if ($roleSelected) {
                 $userRole = new UserRole();
                 $userRole->setUser($user);
@@ -61,47 +55,35 @@ class InscriptionController extends AbstractController
                 $entityManager->persist($userRole);
             }
 
-            // Générer un code de validation à 6 chiffres
-            $codeValidation = random_int(100000, 999999);
+            // Créer le profil
+            $citizen = new CitizenProfile();
+            $citizen->setUser($user);
+            $citizen->setNom($data['nom']);
+            $citizen->setPrenoms($data['prenoms']);
+            $citizen->setDateDeNaissance($data['dateDeNaissance']);
+            $citizen->setNin($data['nin']);
+            $citizen->setAdresse($data['adresse']);
+            $citizen->setCommune($data['commune']);
 
-            // Envoyer l'e-mail
+            $entityManager->persist($citizen);
+            $entityManager->flush();
+
+            // Envoyer email avec code validation
+            $codeValidation = random_int(100000, 999999);
             $email = (new Email())
                 ->from('notahiana.princy@gmail.com')
                 ->to($user->getEmail())
                 ->subject('Code de validation')
                 ->text("Votre code de validation est : $codeValidation");
-
             $mailer->send($email);
 
-            $entityManager->flush();
-
-            $this->addFlash('success', 'Inscription réussie ! Un code de validation a été envoyé par e-mail.');
-
-            // Lier le profil au nouvel utilisateur si le formulaire profil est rempli
-            if ($formProfil->isSubmitted() && $formProfil->isValid()) {
-                $citizen->setUserId($user);
-                $entityManager->persist($citizen);
-                $entityManager->flush();
-                $this->addFlash('success', 'Votre profil a été enregistré avec succès !');
-            }
+            $this->addFlash('success', 'Inscription et profil enregistrés ! Un code de validation a été envoyé par email.');
 
             return $this->redirectToRoute('app_inscription');
         }
 
-        // === Gestion du formulaire Profil si uniquement profil soumis ===
-        if ($formProfil->isSubmitted() && $formProfil->isValid()) {
-            // Ici on pourrait associer à un utilisateur existant si nécessaire
-            $entityManager->persist($citizen);
-            $entityManager->flush();
-            $this->addFlash('success', 'Votre profil a été mis à jour avec succès !');
-
-            return $this->redirectToRoute('app_inscription');
-        }
-
-        // Rendu Twig avec les deux formulaires
         return $this->render('inscription/index.html.twig', [
-            'formInscription' => $formInscription->createView(),
-            'formProfil' => $formProfil->createView(),
+            'formInscription' => $form->createView(),
         ]);
     }
 }

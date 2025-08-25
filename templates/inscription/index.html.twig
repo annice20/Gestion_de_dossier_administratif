@@ -3,85 +3,86 @@
 {% block title %}Inscription & Profil{% endblock %}
 
 {% block body %}
-    <style>
-        .suivant {
-            width: 10%;
-            margin: auto;
-        }
-    </style>
-    <div class="container-main">
-        {# Section Inscription #}
-        <div class="form-card">
-            {% for message in app.flashes('success') %}
-                <div class="alert alert-success">
-                    {{ message }}
-                </div>
-            {% endfor %}
-            <h2 class="form-title">Inscription</h2>
-            {{ form_start(formInscription) }}
-                {# Email #}
-                <div class="form-field-row">
-                    {{ form_widget(formInscription.email, {'attr': {'placeholder': 'Entrer votre e-mail'}}) }}
-                </div>
-                {# Téléphone #}
-                <div class="form-field-row">
-                    {{ form_widget(formInscription.telephone, {'attr': {'placeholder': 'Entrer votre numéro de téléphone'}}) }}
-                </div>
-                {# Mot de passe #}
-                <div class="form-field-row">
-                    {{ form_widget(formInscription.hashMdp, {'attr': {'placeholder': 'Entrer le mot de passe'}}) }}
-                </div>
-                {# Langue #}
-                <div class="form-field-row" style="display: flex; text-align: right;">
-                    <label style="margin-right: 15px;">Langue:</label>
-                    {{ form_widget(formInscription.langue) }}
-                </div>
-                {# Langue #}
-                <div class="form-field-row" style="display: flex; text-align: right;">
-                    <label style="margin-right: 15px;">Role:</label>
-                    {{ form_widget(formInscription.roles) }}
-                </div>
-                <button type="submit" class="btn btn-inscription">S'inscrire</button>
-            {{ form_end(formInscription) }}
-        </div>
+<style>
+    .form-card {
+        width: 50%;
+        padding: 20px;
+        border-radius: 10px;
+    }
 
-        {# Section Profil #}
-        <div class="form-card">
-            <h2 class="form-title">Profil</h2>
-            {{ form_start(formProfil) }}
-                {# Nom et Prénom #}
-                <div class="form-group-inline">
-                    <div class="form-field-row" >
-                        {{ form_widget(formProfil.nom, {'attr': {'placeholder': 'Nom'}}) }}
+    h2 {
+        text-align: center;
+    }
+
+    .form-control {
+        height: 50px;
+        margin-bottom: 1rem;
+    }
+
+    .form-group .form-control {
+        background-color: white;
+    }
+
+    .btn-inscription {
+        margin: auto;
+    }
+
+    .suivant {
+        margin: auto;
+    }
+</style>
+
+<div class="container-main">
+    <div class="form-card">
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+        <h2>Inscription</h2>
+        {{ form_start(formInscription) }}
+            <div class="row">
+                <div class="col">
+                    <div class="form-group mt-1">
+                        {{ form_widget(formInscription.email, {'attr': {'class': 'form-control', 'placeholder': 'Entrer votre e-mail'}}) }}
                     </div>
-                    <div class="form-field-row">
-                        {{ form_widget(formProfil.prenoms, {'attr': {'placeholder': 'Prénom'}}) }}
+                    <div class="form-group">
+                        {{ form_widget(formInscription.telephone, {'attr': {'class': 'form-control', 'placeholder': 'Entrer votre numéro de téléphone'}}) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_widget(formInscription.hashMdp, {'attr': {'class': 'form-control', 'placeholder': 'Entrer le mot de passe'}}) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_widget(formInscription.langue, {'attr': {'class': 'form-control', 'placeholder': 'Entrer votre langue'}}) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_widget(formInscription.roles, {'attr': {'class': 'form-control'}}) }}
                     </div>
                 </div>
-                {# Date de naissance #}
-                <div class="form-field-row" style="margin-top: 10px;">
-                    {{ form_label(formProfil.dateDeNaissance, 'Date de naissance :') }}
-                    {{ form_widget(formProfil.dateDeNaissance, {'attr': {'placeholder': 'dd / mm / yyyy'}}) }}
+                <div class="col">
+                    <div class="form-group">
+                        {{ form_widget(formInscription.nom, {'attr': {'class': 'form-control', 'placeholder': 'Nom'}}) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_widget(formInscription.prenoms, {'attr': {'class': 'form-control', 'placeholder': 'Prénom'}}) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_widget(formInscription.dateDeNaissance, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_widget(formInscription.nin, {'attr': {'class': 'form-control', 'placeholder': 'NIN'}}) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_widget(formInscription.adresse, {'attr': {'class': 'form-control', 'placeholder': 'Adresse'}}) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_widget(formInscription.commune, {'attr': {'class': 'form-control', 'placeholder': 'Commune'}}) }}
+                    </div>
                 </div>
-                {# Numéro CIN #}
-                <div class="form-field-row">
-                    {{ form_label(formProfil.nin, 'Numéro CIN :') }}
-                    {{ form_widget(formProfil.nin) }}
-                </div>
-                {# Adresse et Lot #}
-                <div class="form-field-row">
-                    {{ form_label(formProfil.adresse, 'Adresse :') }}
-                    {{ form_widget(formProfil.adresse, {'attr': {'placeholder': 'Lot'}}) }}
-        
-                </div>
-                {# Commune #}
-                <div class="form-field-row">
-                    {{ form_label(formProfil.commune, 'Commune :') }}
-                    {{ form_widget(formProfil.commune, {'attr': {'placeholder': 'à'}}) }}
-                </div>
-                <button type="submit" class="btn btn-creer" >Créer</button>
-            {{ form_end(formProfil) }}
-        </div>
+            </div>
+            <button type="submit" class="btn btn-inscription">S'inscrire</button>
+            <a class="suivant btn btn-primary mt-2" href="{{ path('app_code_validation') }}">Suivant</a>
+        {{ form_end(formInscription) }}
     </div>
-    <a class="suivant btn btn-primary" href="{{ path('app_code_validation') }}">Suivant</a>
+</div>
 {% endblock %}

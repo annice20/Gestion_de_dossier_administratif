@@ -38,7 +38,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $createdAt = null;
 
-    #[ORM\OneToOne(mappedBy: 'user', targetEntity: CitizenProfile::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(targetEntity: CitizenProfile::class, mappedBy: 'user')]
     private ?CitizenProfile $citizenProfile = null;
 
     public function __construct()
