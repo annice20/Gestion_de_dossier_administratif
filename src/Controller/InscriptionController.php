@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Entity\UserRole;
 use App\Entity\CitizenProfile;
 use App\Form\RegistrationProfilType;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,6 +18,12 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class InscriptionController extends AbstractController
 {
+    private $repositoryuser;
+
+    public function __construct(UserRepository $repositoryuser) {
+        $this->repositoryuser = $repositoryuser;
+    }
+    
     #[Route('/inscription', name: 'app_inscription')]
     public function register(
         Request $request,
@@ -82,8 +89,11 @@ class InscriptionController extends AbstractController
             return $this->redirectToRoute('app_inscription');
         }
 
+        $lastUser = $this->repositoryuser->findOneBy([], ['id' => 'DESC']);
+        
         return $this->render('inscription/index.html.twig', [
             'formInscription' => $form->createView(),
+            'lastUser' => $lastUser,
         ]);
     }
 }

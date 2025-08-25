@@ -4,31 +4,37 @@
 
 {% block body %}
 <style>
+    .container-main {
+        display: flex;
+        justify-content: center;
+        margin-top: 30px;
+    }
+
     .form-card {
         width: 50%;
         padding: 20px;
         border-radius: 10px;
+        background: #ddb2b2; /* couleur de fond pour bien voir la card */
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1); /* petite ombre */
     }
 
     h2 {
         text-align: center;
+        margin-bottom: 20px;
     }
 
     .form-control {
         height: 50px;
         margin-bottom: 1rem;
     }
-
+    
     .form-group .form-control {
         background-color: white;
     }
 
-    .btn-inscription {
-        margin: auto;
-    }
-
-    .suivant {
-        margin: auto;
+    .btn-inscription, .suivant {
+        display: block;
+        margin: 20px auto 0 auto;
     }
 </style>
 
@@ -39,7 +45,9 @@
                 {{ message }}
             </div>
         {% endfor %}
+        
         <h2>Inscription</h2>
+
         {{ form_start(formInscription) }}
             <div class="row">
                 <div class="col">
@@ -59,6 +67,7 @@
                         {{ form_widget(formInscription.roles, {'attr': {'class': 'form-control'}}) }}
                     </div>
                 </div>
+
                 <div class="col">
                     <div class="form-group">
                         {{ form_widget(formInscription.nom, {'attr': {'class': 'form-control', 'placeholder': 'Nom'}}) }}
@@ -80,9 +89,16 @@
                     </div>
                 </div>
             </div>
-            <button type="submit" class="btn btn-inscription">S'inscrire</button>
-            <a class="suivant btn btn-primary mt-2" href="{{ path('app_code_validation') }}">Suivant</a>
+
+            <button type="submit" class="btn btn-primary btn-inscription">S'inscrire</button>
         {{ form_end(formInscription) }}
+
+        {% if lastUser %}
+            <a class="suivant btn btn-success mt-3"
+               href="{{ path('app_code_validation', {'id': lastUser.getId()}) }}">
+               Suivant
+            </a>
+        {% endif %}
     </div>
 </div>
 {% endblock %}
