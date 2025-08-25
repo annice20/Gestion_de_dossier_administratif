@@ -38,6 +38,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $createdAt = null;
 
+    #[ORM\OneToOne(mappedBy: 'user', targetEntity: CitizenProfile::class, cascade: ['persist', 'remove'])]
+    private ?CitizenProfile $citizenProfile = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
@@ -126,28 +129,42 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    // ========================================
-    // Méthodes pour UserInterface & PasswordAuthenticatedUserInterface
-    // ========================================
+    public function getCitizenProfile(): ?CitizenProfile
+    {
+        return $this->citizenProfile;
+    }
+
+    public function setCitizenProfile(?CitizenProfile $citizenProfile): static
+    {
+        if ($citizenProfile !== null && $citizenProfile->getUser() !== $this) {
+            $citizenProfile->setUser($this);
+        }
+
+        $this->citizenProfile = $citizenProfile;
+        return $this;
+    }
+
+    // ===============================
+    // Méthodes UserInterface / PasswordAuthenticatedUserInterface
+    // ===============================
 
     public function getUserIdentifier(): string
     {
-        return (string) $this->email; // Identifiant pour Symfony
+        return (string) $this->email;
     }
 
     public function getPassword(): string
     {
-        return (string) $this->hashMdp; // Retourne le mot de passe hashé
+        return (string) $this->hashMdp;
     }
 
     public function getRoles(): array
     {
-        // Pour l'instant on retourne un rôle par défaut
         return ['ROLE_USER'];
     }
 
     public function eraseCredentials(): void
     {
-        // Si tu stockes des infos sensibles temporairement, les effacer ici
+        // Efface les données sensibles temporaires si nécessaire
     }
 }
