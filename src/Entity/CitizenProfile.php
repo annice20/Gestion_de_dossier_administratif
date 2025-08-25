@@ -15,8 +15,7 @@ class CitizenProfile
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\OneToOne]
-    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false, unique: true)]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'citizenProfile')]
     private ?User $user = null;
 
     #[ORM\Column(length: 50)]
@@ -37,10 +36,6 @@ class CitizenProfile
     #[ORM\Column(length: 50)]
     private ?string $commune = null;
 
-    // ===========================
-    // Getters et Setters
-    // ===========================
-
     public function getId(): ?int
     {
         return $this->id;
@@ -51,7 +46,7 @@ class CitizenProfile
         return $this->user;
     }
 
-    public function setUser(User $user): static
+    public function setUser(?User $user): static
     {
         $this->user = $user;
         return $this;
