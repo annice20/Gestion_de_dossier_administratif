@@ -67,18 +67,31 @@
 
 <div class="card">
   <div class="card-body">
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            {% if label == 'success' %}
+                <div class="alert alert-success">{{ message }}</div>
+            {% elseif label == 'error' %}
+                <div class="alert alert-danger">{{ message }}</div>
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+
     <h1>Code de vérification</h1>
     <p class="mt-5">Veuillez entrer votre code de vérification reçu par email</p>
-    <div id="code-inputs">
-        <input type="text" maxlength="1" class="digit">
-        <input type="text" maxlength="1" class="digit">
-        <input type="text" maxlength="1" class="digit">
-        <input type="text" maxlength="1" class="digit">
-        <input type="text" maxlength="1" class="digit">
-        <input type="text" maxlength="1" class="digit">
-    </div>
-    <button class="envoyer">Envoyer</button>
-    <p>Vous n'avez pas encore reçu le code ? <a href="#">Renvoyer</a></p>
+    {{ form_start(formcodevalidation) }}
+        <div id="code-inputs">
+            {{ form_widget(formcodevalidation.user_id)}}
+            {{ form_widget(formcodevalidation.digit1, {'attr': {'maxlength': 1, 'class': 'digit'}}) }}
+            {{ form_widget(formcodevalidation.digit2, {'attr': {'maxlength': 1, 'class': 'digit'}}) }}
+            {{ form_widget(formcodevalidation.digit3, {'attr': {'maxlength': 1, 'class': 'digit'}}) }}
+            {{ form_widget(formcodevalidation.digit4, {'attr': {'maxlength': 1, 'class': 'digit'}}) }}
+            {{ form_widget(formcodevalidation.digit5, {'attr': {'maxlength': 1, 'class': 'digit'}}) }}
+            {{ form_widget(formcodevalidation.digit6, {'attr': {'maxlength': 1, 'class': 'digit'}}) }}
+        </div>
+        <button type="submit" class="envoyer">Envoyer</button>
+        <p>Vous n'avez pas encore reçu le code ? <a href="#">Renvoyer</a></p>
+    {{form_end(formcodevalidation) }}
   </div>
 </div>
 {% endblock %}

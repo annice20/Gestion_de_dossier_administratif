@@ -7,6 +7,7 @@ use App\Entity\UserRole;
 use App\Entity\CitizenProfile;
 use App\Form\RegistrationProfilType;
 use App\Repository\UserRepository;
+use App\Entity\CodeValidation;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -83,6 +84,17 @@ class InscriptionController extends AbstractController
                 ->subject('Code de validation')
                 ->text("Votre code de validation est : $codeValidation");
             $mailer->send($email);
+
+            // Stocker le code dans la table code_validation
+            $validationCode = new CodeValidation();
+            $validationCode->setUser($user);
+            $validationCode->setCode($codeValidation);
+            $validationCode->setCreatedAt(new \DateTime());
+            $validationCode->setExpiresAt((new \DateTime())->modify('+15 minutes'));
+            $validationCode->setIsUsed(false);
+
+            $entityManager->persist($validationCode);
+            $entityManager->flush();
 
             $this->addFlash('success', 'Inscription et profil enregistrés ! Un code de validation a été envoyé par email.');
 
