@@ -3,13 +3,17 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
+#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -17,34 +21,43 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $hashMdp = null;
+    /**
+     * @var string The hashed password
+     */
+    #[ORM\Column]
+    private ?string $password = null;
 
-    #[ORM\Column(length: 50, nullable: true)]
+    #[ORM\Column(length: 255)]
     private ?string $statut = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 255)]
     private ?string $telephone = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 255)]
     private ?string $langue = null;
 
-    #[ORM\Column(type: 'boolean')]
-    private bool $twoFAEnabled = false;
+    #[ORM\Column]
+    private ?bool $two_faenabled = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $createdAt = null;
+    private ?\DateTimeInterface $created_at = null;
 
-    #[ORM\OneToOne(targetEntity: CitizenProfile::class, mappedBy: 'user')]
+    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
     private ?CitizenProfile $citizenProfile = null;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: UserRole::class, orphanRemoval: true)]
+    private Collection $userRoles;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: CodeValidation::class, orphanRemoval: true)]
+    private Collection $codeValidations;
 
     public function __construct()
     {
-        $this->createdAt = new \DateTimeImmutable();
-        $this->twoFAEnabled = false;
+        $this->userRoles = new ArrayCollection();
+        $this->codeValidations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -60,18 +73,63 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setEmail(string $email): static
     {
         $this->email = $email;
+
         return $this;
     }
 
-    public function getHashMdp(): ?string
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): string
     {
-        return $this->hashMdp;
+        return (string) $this->email;
     }
 
-    public function setHashMdp(string $hashMdp): static
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
     {
-        $this->hashMdp = $hashMdp;
+        $roles = ['ROLE_USER']; // Garantit que chaque utilisateur a au moins ROLE_USER
+
+        foreach ($this->getUserRoles() as $userRole) {
+            $roles[] = $userRole->getRole()->getCode();
+        }
+
+        return array_unique($roles);
+    }
+    
+    // La méthode setRoles n'est plus nécessaire car les rôles sont gérés via une relation
+    // public function setRoles(array $roles): static
+    // {
+    //     $this->roles = $roles;
+    //     return $this;
+    // }
+
+    /**
+     * @see PasswordAuthenticatedUserInterface
+     */
+    public function getPassword(): string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): static
+    {
+        $this->password = $password;
+
         return $this;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials(): void
+    {
+        // Si vous stockez des données temporaires et sensibles sur l'utilisateur, effacez-les ici
+        // $this->plainPassword = null;
     }
 
     public function getStatut(): ?string
@@ -79,9 +137,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->statut;
     }
 
-    public function setStatut(?string $statut): static
+    public function setStatut(string $statut): static
     {
         $this->statut = $statut;
+
         return $this;
     }
 
@@ -90,9 +149,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->telephone;
     }
 
-    public function setTelephone(?string $telephone): static
+    public function setTelephone(string $telephone): static
     {
         $this->telephone = $telephone;
+
         return $this;
     }
 
@@ -101,31 +161,34 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->langue;
     }
 
-    public function setLangue(?string $langue): static
+    public function setLangue(string $langue): static
     {
         $this->langue = $langue;
+
         return $this;
     }
 
-    public function isTwoFAEnabled(): bool
+    public function isTwoFAEnabled(): ?bool
     {
-        return $this->twoFAEnabled;
+        return $this->two_faenabled;
     }
 
-    public function setTwoFAEnabled(bool $twoFAEnabled): static
+    public function setTwoFAEnabled(bool $two_faenabled): static
     {
-        $this->twoFAEnabled = $twoFAEnabled;
+        $this->two_faenabled = $two_faenabled;
+
         return $this;
     }
 
     public function getCreatedAt(): ?\DateTimeInterface
     {
-        return $this->createdAt;
+        return $this->created_at;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): static
+    public function setCreatedAt(\DateTimeInterface $created_at): static
     {
-        $this->createdAt = $createdAt;
+        $this->created_at = $created_at;
+
         return $this;
     }
 
@@ -134,37 +197,74 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->citizenProfile;
     }
 
-    public function setCitizenProfile(?CitizenProfile $citizenProfile): static
+    public function setCitizenProfile(CitizenProfile $citizenProfile): static
     {
-        if ($citizenProfile !== null && $citizenProfile->getUser() !== $this) {
+        // set the owning side of the relation if necessary
+        if ($citizenProfile->getUser() !== $this) {
             $citizenProfile->setUser($this);
         }
 
         $this->citizenProfile = $citizenProfile;
+
         return $this;
     }
 
-    // ===============================
-    // Méthodes UserInterface / PasswordAuthenticatedUserInterface
-    // ===============================
-
-    public function getUserIdentifier(): string
+    /**
+     * @return Collection<int, UserRole>
+     */
+    public function getUserRoles(): Collection
     {
-        return (string) $this->email;
+        return $this->userRoles;
     }
 
-    public function getPassword(): string
+    public function addUserRole(UserRole $userRole): static
     {
-        return (string) $this->hashMdp;
+        if (!$this->userRoles->contains($userRole)) {
+            $this->userRoles->add($userRole);
+            $userRole->setUser($this);
+        }
+
+        return $this;
     }
 
-    public function getRoles(): array
+    public function removeUserRole(UserRole $userRole): static
     {
-        return ['ROLE_USER'];
+        if ($this->userRoles->removeElement($userRole)) {
+            // set the owning side to null (unless already changed)
+            if ($userRole->getUser() === $this) {
+                $userRole->setUser(null);
+            }
+        }
+
+        return $this;
     }
 
-    public function eraseCredentials(): void
+    /**
+     * @return Collection<int, CodeValidation>
+     */
+    public function getCodeValidations(): Collection
     {
-        // Efface les données sensibles temporaires si nécessaire
+        return $this->codeValidations;
+    }
+
+    public function addCodeValidation(CodeValidation $codeValidation): static
+    {
+        if (!$this->codeValidations->contains($codeValidation)) {
+            $this->codeValidations->add($codeValidation);
+            $codeValidation->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCodeValidation(CodeValidation $codeValidation): static
+    {
+        if ($this->codeValidations->removeElement($codeValidation)) {
+            if ($codeValidation->getUser() === $this) {
+                $codeValidation->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }

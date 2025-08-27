@@ -27,7 +27,7 @@ class RegistrationProfilType extends AbstractType
             ->add('telephone', TelType::class, [
                 'label' => 'Entrer votre numéro de téléphone'
             ])
-            ->add('hashMdp', PasswordType::class, [
+            ->add('password', PasswordType::class, [
                 'label' => 'Entrer le mot de passe'
             ])
             ->add('langue', ChoiceType::class, [

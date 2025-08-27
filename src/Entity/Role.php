@@ -70,7 +70,6 @@ class Role
             $this->userRoles->add($userRole);
             $userRole->setRole($this);
         }
-
         return $this;
     }
 
@@ -81,7 +80,6 @@ class Role
                 $userRole->setRole(null);
             }
         }
-
         return $this;
     }
 }

@@ -37,15 +37,22 @@ class InscriptionController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
-
             // Créer l'utilisateur
             $user = new User();
-            $user->setEmail($data['email']);
-            $hashedPassword = $passwordHasher->hashPassword($user, $data['hashMdp']);
-            $user->setHashMdp($hashedPassword);
-            $user->setTelephone($data['telephone']);
-            $user->setLangue($data['langue']);
+            $user->setEmail($form->get('email')->getData());
+            // Récupère le mot de passe en clair du formulaire
+            $plainPassword = $form->get('password')->getData();
+
+            // Hache le mot de passe et le définit sur l'entité
+            $user->setPassword(
+                $passwordHasher->hashPassword(
+                    $user,
+                    $plainPassword
+                )
+            );
+            
+            $user->setTelephone($form->get('telephone')->getData());
+            $user->setLangue($form->get('langue')->getData());
             $user->setStatut('actif');
             $user->setTwoFAEnabled(false);
             $user->setCreatedAt(new \DateTime());
@@ -66,12 +73,12 @@ class InscriptionController extends AbstractController
             // Créer le profil
             $citizen = new CitizenProfile();
             $citizen->setUser($user);
-            $citizen->setNom($data['nom']);
-            $citizen->setPrenoms($data['prenoms']);
-            $citizen->setDateDeNaissance($data['dateDeNaissance']);
-            $citizen->setNin($data['nin']);
-            $citizen->setAdresse($data['adresse']);
-            $citizen->setCommune($data['commune']);
+            $citizen->setNom($form->get('nom')->getData());
+            $citizen->setPrenoms($form->get('prenoms')->getData());
+            $citizen->setDateDeNaissance($form->get('dateDeNaissance')->getData());
+            $citizen->setNin($form->get('nin')->getData());
+            $citizen->setAdresse($form->get('adresse')->getData());
+            $citizen->setCommune($form->get('commune')->getData());
 
             $entityManager->persist($citizen);
             $entityManager->flush();
