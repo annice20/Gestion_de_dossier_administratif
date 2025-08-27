@@ -18,9 +18,6 @@ class CitizenProfile
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'citizenProfile')]
     private ?User $user = null;
 
-    #[ORM\OneToMany(mappedBy: 'citizenProfile', targetEntity: Request::class)]
-    private Collection $requests;
-
     #[ORM\Column(length: 50)]
     private ?string $nom = null;
 
