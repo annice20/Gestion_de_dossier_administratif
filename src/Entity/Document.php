@@ -19,8 +19,8 @@ class Document
     /**
      * @var Collection<int, Request>
      */
-    #[ORM\OneToMany(targetEntity: Request::class, mappedBy: 'document')]
-    private Collection $request_id;
+    #[ORM\ManyToOne(targetEntity: Request::class, inversedBy: 'document')]
+    private Collection $request;
 
     #[ORM\Column(length: 50)]
     private ?string $type = null;

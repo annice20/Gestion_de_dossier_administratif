@@ -32,10 +32,8 @@ class RequestType
     #[ORM\Column(type: Types::TEXT)]
     private ?string $workflow = null;
 
-    #[ORM\ManyToOne(inversedBy: 'type_id')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Request $request = null;
-
+    #[ORM\OneToMany(mappedBy: 'requestType', targetEntity: Request::class)]
+    private Collection $requests;
 
     public function getId(): ?int
     {
