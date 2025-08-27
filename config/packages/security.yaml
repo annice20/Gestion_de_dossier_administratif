@@ -18,9 +18,9 @@ security:
             lazy: true
             provider: app_user_provider
             form_login:
-                login_path: app_login       # route vers le formulaire de login
-                check_path: app_login       # route qui traite le POST
-                default_target_path: app_accueil
+                login_path: app_login
+                check_path: app_login
+                # default_target_path: app_accueil
                 username_parameter: email
                 password_parameter: password
                 enable_csrf: true

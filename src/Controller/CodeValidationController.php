@@ -54,6 +54,7 @@ final class CodeValidationController extends AbstractController
                 $validationCode->setIsUsed(true);
                 $entityManager->flush();
                 $this->addFlash('success', 'Code correct !');
+                return $this->redirectToRoute('app_couvre');
             } else {
                 // Code invalide ou expiré
                 $this->addFlash('error', 'Code invalide ou expiré.');
