@@ -1,0 +1,29 @@
+body {
+    margin: 0;
+    background-image: url('../images/1.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+
+.navbar-nav {
+    margin-left: 600px;
+}
+
+.nav-item .nav-link {
+    color: black;
+    margin-left: 100px;
+    &:hover {
+       background-color: #A7690B;
+       border-radius: 1rem;
+       -webkit-border-radius: 1rem;
+       -moz-border-radius: 1rem;
+       -ms-border-radius: 1rem;
+       -o-border-radius: 1rem;
+       transition: background-color 0.3s ease;
+       -webkit-transition: background-color 0.3s ease;
+       -moz-transition: background-color 0.3s ease;
+       -ms-transition: background-color 0.3s ease;
+       -o-transition: background-color 0.3s ease;
+}
+}
