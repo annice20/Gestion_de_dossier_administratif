@@ -15,13 +15,50 @@
         }
 
         .form-control {
-            margin-top: 2rem;
-            height: 50px;
+            margin-top: 1rem;
+            height: 60px;
+            border-radius: 12px;
+            border: none;
+            padding: 0 1.5rem;
+            width: 100%;
+            box-sizing: border-box;
+            background-color: #f7f7f7;
+            transition: background-color 0.3s;
         }
 
-        .checkbox {
-            margin-top: 3rem;
-            margin: 0;
+        .form-control::placeholder {
+            color: #888;
+        }
+
+        .form-control:focus {
+            outline: none;
+            background-color: #fff;
+        }
+
+        .card-body a {
+            font-size: 1rem;
+            color: #333;
+            text-decoration: none;
+        }
+
+        .card-body a:hover {
+            text-decoration: underline;
+            color: blue;
+        }
+
+        .checkbox-container {
+            display: flex;
+            margin-top: 1.5rem;
+        }
+
+        .checkbox-container input[type="checkbox"] {
+            width: 20px;
+        }
+
+        .checkbox-container label {
+            margin-left: .5rem;
+            margin-top: 0;
+            color: black;
         }
     </style>
     <div class="card">
@@ -31,37 +68,24 @@
                     <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
                 {% endif %}
 
-                {% if app.user %}
-                    <div class="mb-3">
-                        You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
-                    </div>
-                {% endif %}
-
-                <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+                <h1 class="h3 mb-3 font-weight-normal">Connexion</h1>
                 <input type="email" value="{{ last_username }}" name="email" id="username" placeholder="Entrez votre email" class="form-control" autocomplete="email" required autofocus>
 
                 <input type="password" name="password" id="password" class="form-control" placeholder="Entrez votre mot de passe" autocomplete="current-password" required>
                 <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
                 <a href="#">Mot de passe oublié ?</a>
 
-                <div class="checkbox mb-3">
+                <div class="checkbox checkbox-container">
                     <input type="checkbox" name="_remember_me" id="_remember_me">
                     <label for="_remember_me">Remember me</label>
                 </div>
 
-                {#
-                    Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
-                    See https://symfony.com/doc/current/security/remember_me.html
-
-                    <div class="checkbox mb-3">
-                        <input type="checkbox" name="_remember_me" id="_remember_me">
-                        <label for="_remember_me">Remember me</label>
-                    </div>
-                #}
-
                 <button class="btn btn-lg btn-primary" type="submit">
                     Sign in
                 </button>
+                <p class="mt-2">
+                    Vous n'avez pas encore de compte ? <a href="{{ path('app_inscription') }}">En créer</a>
+                </p>
             </form>
         </div>
     </div>
