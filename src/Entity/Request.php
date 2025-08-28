@@ -23,7 +23,7 @@ class Request
     #[ORM\ManyToOne(targetEntity: CitizenProfile::class, inversedBy: 'requests')]
     private ?CitizenProfile $demandeur = null;
 
-    // Plusieurs requêtes peuvent être d’un même type
+    // Plusieurs requêtes peuvent être d'un même type
     #[ORM\ManyToOne(targetEntity: RequestType::class, inversedBy: 'requests')]
     private ?RequestType $type = null;
 
@@ -46,16 +46,17 @@ class Request
     #[ORM\Column(length: 30)]
     private ?string $canal = null;
 
-   #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
-    private ?\DateTime $createdAt = null;
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
-    private ?\DateTime $updatedAt = null;
+    private ?\DateTimeImmutable $updatedAt = null;
 
     public function __construct()
     {
-        $this->type = new ArrayCollection();
-        $this->demandeur = new ArrayCollection();
+        $this->attachments = new ArrayCollection();
+        $this->createdAt = new \DateTimeImmutable();
+        $this->updatedAt = new \DateTimeImmutable();
     }
 
     // --- GETTERS & SETTERS ---
@@ -76,27 +77,25 @@ class Request
         return $this;
     }
 
-    public function getDemandeur(): ?Demandeur
+    public function getDemandeur(): ?CitizenProfile
     {
         return $this->demandeur;
     }
 
-    public function setDemandeur(?Demandeur $demandeur): static
+    public function setDemandeur(?CitizenProfile $demandeur): static
     {
         $this->demandeur = $demandeur;
-
         return $this;
     }
 
-    public function getType(): ?Type
+    public function getType(): ?RequestType
     {
         return $this->type;
     }
 
-    public function setType(?Type $type): static
+    public function setType(?RequestType $type): static
     {
         $this->type = $type;
-
         return $this;
     }
 
@@ -129,23 +128,23 @@ class Request
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTime
+    public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTime $createdAt): static
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTime
+    public function getUpdatedAt(): ?\DateTimeImmutable
     {
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(\DateTime $updatedAt): static
+    public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
         return $this;
@@ -159,7 +158,6 @@ class Request
     public function setStatut(string $statut): static
     {
         $this->statut = $statut;
-
         return $this;
     }
 

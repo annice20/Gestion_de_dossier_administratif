@@ -36,6 +36,16 @@ class CitizenProfile
     #[ORM\Column(length: 50)]
     private ?string $commune = null;
 
+    public function getFullName(): string
+{
+    return $this->prenoms . ' ' . $this->nom;
+}
+
+public function __toString(): string
+{
+    return $this->getFullName();
+}
+
     public function getId(): ?int
     {
         return $this->id;

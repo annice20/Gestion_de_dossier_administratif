@@ -121,89 +121,97 @@
                 <h1>DEMANDE</h1>
             </div>
 
+        <div class="demande-form">
+            <h2>Formulaire de demande</h2>
+
+
+
+
+<div class="container mt-4">
+    <h1 class="mb-4">Créer une nouvelle demande de service</h1>
+
+   
+
+
+<div class="container mt-4">
+    <h1 class="mb-4">Créer une nouvelle demande de service</h1>
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+    {% endfor %}
+
+    <div class="card">
+        <div class="card-body">
             {{ form_start(form) }}
-
-            <div class="form-group">
-                <div class="form-field-row ">
-                    {{ form_label(form.ref) }}
-                    {{ form_widget(form.ref, {'attr': {'class': 'form-control'}}) }}
-                    {{ form_errors(form.ref) }}
-                </div>
-                <div class="form-field-row ">
-                    {{ form_label(form.demandeurs) }}
-                    {{ form_widget(form.demandeurs, {'attr': {'class': 'form-control'}}) }}
-                    {{ form_errors(form.demandeurs) }}
-                </div>
             
-
-
-                <div class="form-field-row ">
-                    {{ form_label(form.statut) }}
-                    {{ form_widget(form.statut, {'attr': {'class': 'form-select'}}) }}
-                    {{ form_errors(form.statut) }}
+            <div class="row">
+                <div class="col-md-6">
+                    {{ form_row(form.ref) }}
                 </div>
-                <div class="form-field-row ">
-                    {{ form_label(form.centre) }}
-                    {{ form_widget(form.centre, {'attr': {'class': 'form-control'}}) }}
-                    {{ form_errors(form.centre) }}
-                </div>
-            
-
-
-                <div class="form-field-row ">
-                    {{ form_label(form.priorite) }}
-                    {{ form_widget(form.priorite, {'attr': {'class': 'form-select'}}) }}
-                    {{ form_errors(form.priorite) }}
-                </div>
-                <div class="form-field-row ">
-                    {{ form_label(form.montant) }}
-                    {{ form_widget(form.montant, {'attr': {'class': 'form-control'}}) }}
-                    {{ form_errors(form.montant) }}
-                </div>
-            
-
-
-                <div class="form-field-row ">
-                    {{ form_label(form.canal) }}
-                    {{ form_widget(form.canal, {'attr': {'class': 'form-select'}}) }}
-                    {{ form_errors(form.canal) }}
-                </div>
-{#
-                <div class="form-field-row ">
-                    {{ form_label(form.attachment) }}
-                    {{ form_widget(form.attachment, {'attr': {'class': 'form-select'}}) }}
-                    {{ form_errors(form.attachment) }}
-                </div>
-            
-
-
-                <div class="form-field-row ">
-                    {{ form_label(form.document) }}
-                    {{ form_widget(form.document, {'attr': {'class': 'form-select'}}) }}
-                    {{ form_errors(form.document) }}
-                </div>
-                <div class="form-field-row ">
-                    {{ form_label(form.task) }}
-                    {{ form_widget(form.task, {'attr': {'class': 'form-select'}}) }}
-                    {{ form_errors(form.task) }}
-                </div>
-            
-
-                <div class="form-field-row ">
-                    {{ form_label(form.payment) }}
-                    {{ form_widget(form.payment, {'attr': {'class': 'form-select'}}) }}
-                    {{ form_errors(form.payment) }}
-                </div>
-                <div class="form-field-row ">
-                    {{ form_label(form.decision) }}
-                    {{ form_widget(form.decision, {'attr': {'class': 'form-select'}}) }}
-                    {{ form_errors(form.decision) }}
+                <div class="col-md-6">
+                    {{ form_row(form.demandeur) }}
                 </div>
             </div>
-#}
-            <button type="submit" class="btnn btn-primary">Valider</button>
-
+            
+            <div class="row">
+                <div class="col-md-6">
+                    {{ form_row(form.type) }}
+                </div>
+                <div class="col-md-6">
+                    {{ form_row(form.centre) }}
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-4">
+                    {{ form_row(form.statut) }}
+                </div>
+                <div class="col-md-4">
+                    {{ form_row(form.priorite) }}
+                </div>
+                <div class="col-md-4">
+                    {{ form_row(form.canal) }}
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    {{ form_row(form.montant) }}
+                </div>
+            </div>
+            
+            <div class="mt-3">
+                <button type="submit" class="btn btn-primary">Créer la demande</button>
+                <a href="{{ path('services_liste_index') }}" class="btn btn-secondary">Annuler</a>
+            </div>
+            
             {{ form_end(form) }}
         </div>
     </div>
+</div>
+
+{% if form.type.vars.choices is not empty %}
+<script>
+// Script optionnel pour améliorer l'expérience utilisateur
+document.addEventListener('DOMContentLoaded', function() {
+    // Vous pourriez ajouter ici du JavaScript pour:
+    // - Charger dynamiquement les informations sur le type de demande sélectionné
+    // - Afficher les pièces requises pour le type sélectionné
+    // - etc.
+    
+    const typeSelect = document.getElementById('{{ form.type.vars.id }}');
+    if (typeSelect) {
+        typeSelect.addEventListener('change', function() {
+            // Exemple: charger les détails du type de demande
+            console.log('Type sélectionné:', this.value);
+            // Ici vous pourriez faire un appel AJAX pour récupérer les infos
+        });
+    }
+});
+</script>
+{% endif %}
+
+
 {% endblock %}

@@ -2,12 +2,9 @@
 
 namespace App\Form;
 
-use App\Entity\Attachment;
-use App\Entity\Decision;
-use App\Entity\Document;
-use App\Entity\Payment;
+use App\Entity\CitizenProfile;
 use App\Entity\Request;
-use App\Entity\Task;
+use App\Entity\RequestType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -22,11 +19,31 @@ class ServicesListeFormType extends AbstractType
     {
         $builder
             ->add('ref', TextType::class, [
-                'label' => 'Référence'
+                'label' => 'Référence',
+                'attr' => [
+                    'placeholder' => 'Ex: REF-2023-001',
+                ],
             ])
-            ->add('demandeurs', TextType::class, [ // Add this field
+            ->add('demandeur', EntityType::class, [
+                'class' => CitizenProfile::class,
+                'choice_label' => function (CitizenProfile $citizen) {
+                    return $citizen->getPrenoms() . ' ' . $citizen->getNom() . ' (' . $citizen->getNin() . ')';
+                },
                 'label' => 'Demandeur',
                 'required' => false,
+                'placeholder' => 'Sélectionnez un demandeur',
+                'attr' => [
+                    'class' => 'select2', // Optionnel: pour utiliser Select2
+                ],
+            ])
+            ->add('type', EntityType::class, [
+                'class' => RequestType::class,
+                'choice_label' => 'libelle',
+                'label' => 'Type de demande',
+                'placeholder' => 'Sélectionnez un type de demande',
+                'attr' => [
+                    'class' => 'select2',
+                ],
             ])
             ->add('statut', ChoiceType::class, [
                 'label' => 'Statut',
@@ -35,21 +52,30 @@ class ServicesListeFormType extends AbstractType
                     'En cours' => 'en_cours',
                     'Traité' => 'traite',
                 ],
+                'placeholder' => 'Sélectionnez un statut',
             ])
             ->add('centre', TextType::class, [
-                'label' => 'Centre'
+                'label' => 'Centre',
+                'attr' => [
+                    'placeholder' => 'Ex: Centre Principal',
+                ],
             ])
             ->add('priorite', ChoiceType::class, [
                 'label' => 'Priorité',
                 'choices' => [
-                    'Normale' => 'normale',
-                    'Urgente' => 'urgente',
+                    'Normale' => 0,
+                    'Urgente' => 1,
                 ],
+                'placeholder' => 'Sélectionnez une priorité',
             ])
             ->add('montant', MoneyType::class, [
                 'label' => 'Montant',
                 'currency' => 'MGA',
                 'required' => false,
+                'attr' => [
+                    'min' => 0,
+                    'placeholder' => '0,00',
+                ],
             ])
             ->add('canal', ChoiceType::class, [
                 'label' => 'Canal',
@@ -58,32 +84,8 @@ class ServicesListeFormType extends AbstractType
                     'Guichet' => 'guichet',
                     'Téléphone' => 'telephone',
                 ],
+                'placeholder' => 'Sélectionnez un canal',
             ])
-         //   ->add('attachment', EntityType::class, [
-         //       'class' => Attachment::class,
-         //       'choice_label' => 'name', // Changed to display a meaningful field
-         //       'required' => false,
-         //   ])
-         //   ->add('document', EntityType::class, [
-         //       'class' => Document::class,
-         //       'choice_label' => 'name', // Changed to display a meaningful field
-         //       'required' => false,
-         //   ])
-         //   ->add('task', EntityType::class, [
-         //       'class' => Task::class,
-         //       'choice_label' => 'name', // Changed to display a meaningful field
-         //       'required' => false,
-         //   ])
-         //   ->add('payment', EntityType::class, [
-         //       'class' => Payment::class,
-         //       'choice_label' => 'type', // Changed to display a meaningful field
-         //       'required' => false,
-         //   ])
-         //   ->add('decision', EntityType::class, [
-         //       'class' => Decision::class,
-         //       'choice_label' => 'type', // Changed to display a meaningful field
-         //       'required' => false,
-         //   ])
         ;
     }
 
