@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\AttachmentRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
 
 #[ORM\Entity(repositoryClass: AttachmentRepository::class)]
 class Attachment
@@ -14,7 +15,6 @@ class Attachment
     #[ORM\Column]
     private ?int $id = null;
 
-    // Plusieurs pièces jointes appartiennent à une seule demande
     #[ORM\ManyToOne(targetEntity: Request::class, inversedBy: 'attachments')]
     private ?Request $request = null;
 
@@ -35,6 +35,27 @@ class Attachment
 
     #[ORM\Column(length: 20)]
     private ?string $verif_statut = null;
+
+    // Champ temporaire pour gérer le fichier uploadé (non persisté)
+    private ?File $file = null;
+
+    public function getFile(): ?File
+    {
+        return $this->file;
+    }
+
+    public function setFile(?File $file = null): void
+    {
+        $this->file = $file;
+
+        if ($file) {
+            // Rempli nom_fichier et taille automatiquement à partir du fichier uploadé
+            $this->nom_fichier = $file->getClientOriginalName();
+            $this->taille = $file->getSize();
+        }
+    }
+
+    // Getters et setters standards
 
     public function getId(): ?int
     {

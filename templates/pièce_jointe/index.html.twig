@@ -3,22 +3,27 @@
 {% block title %}Pièce jointe{% endblock %}
 
 {% block body %}
-
 <div class="pj-container">
     <h2>Pièce jointe</h2>
+
+    {# Affichage des messages flash de succès #}
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ label }}" style="padding: 10px; background: #d4edda; color: #155724; border-radius: 5px; margin-bottom: 15px;">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endfor %}
 
     {{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
 
     {{ form_row(form.type_piece) }}
+    {{ form_row(form.file) }} {# Champ upload fichier #}
 
     {{ form_row(form.nom_fichier) }}
-
     {{ form_row(form.hash) }}
-
     {{ form_row(form.url) }}
-
     {{ form_row(form.taille) }}
-
     {{ form_row(form.verif_statut) }}
 
     <button type="submit">Enregistrer</button>
@@ -27,4 +32,27 @@
 
     <a href="{{ path('app_payment') }}" class="payment-link">Effectuer le paiement</a>
 </div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const fileInput = document.querySelector('input[type="file"]');
+    const nomFichierInput = document.querySelector('input[name$="[nom_fichier]"]');
+    const tailleInput = document.querySelector('input[name$="[taille]"]');
+
+    if (fileInput) {
+        fileInput.addEventListener('change', function () {
+            const file = fileInput.files[0];
+            if (file) {
+                nomFichierInput.value = file.name;
+                tailleInput.value = file.size;
+            } else {
+                nomFichierInput.value = '';
+                tailleInput.value = '';
+            }
+        });
+    }
+});
+</script>
 {% endblock %}

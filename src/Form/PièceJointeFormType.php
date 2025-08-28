@@ -9,7 +9,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;  
 use Symfony\Component\Form\Extension\Core\Type\IntegerType; 
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;  
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;  
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 
 class AttachmentType extends AbstractType
 {
@@ -40,13 +41,26 @@ class AttachmentType extends AbstractType
                 ],
                 'placeholder' => '--- Sélectionnez un type de pièce ---',
             ])
-            ->add('nom_fichier', TextType::class, ['label' => 'Nom du fichier'])
+            ->add('file', FileType::class, [
+                'label' => 'Fichier',
+                'required' => true,
+                'mapped' => false,
+            ])
+            ->add('nom_fichier', TextType::class, [
+                'label' => 'Nom du fichier',
+                'required' => false,
+                'attr' => ['readonly' => true],
+            ])
             ->add('hash', TextType::class, ['label' => 'Hash', 'required' => false])
             ->add('url', TextType::class, ['label' => 'URL', 'required' => false])
-            ->add('taille', IntegerType::class, ['label' => 'Taille (en octets)', 'required' => false])
+            ->add('taille', IntegerType::class, [
+                'label' => 'Taille (en octets)',
+                'required' => false,
+                'attr' => ['readonly' => true],
+            ])
             ->add('verif_statut', CheckboxType::class, [
                 'label' => 'Statut de vérification',
-                'required' => false
+                'required' => false,
             ]);
     }
 
