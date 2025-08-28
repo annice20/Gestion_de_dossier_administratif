@@ -92,21 +92,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getRoles(): array
     {
-        $roles = ['ROLE_USER']; // Garantit que chaque utilisateur a au moins ROLE_USER
+        $roles = ['ROLE_USER'];
 
         foreach ($this->getUserRoles() as $userRole) {
-            $roles[] = $userRole->getRole()->getCode();
+            if ($userRole->getRole() !== null) {
+                // On récupère le code du rôle ('ADMIN', 'USER') et on ajoute le préfixe
+                $roles[] = 'ROLE_' . strtoupper($userRole->getRole()->getCode());
+            }
         }
 
         return array_unique($roles);
     }
-    
-    // La méthode setRoles n'est plus nécessaire car les rôles sont gérés via une relation
-    // public function setRoles(array $roles): static
-    // {
-    //     $this->roles = $roles;
-    //     return $this;
-    // }
 
     /**
      * @see PasswordAuthenticatedUserInterface
