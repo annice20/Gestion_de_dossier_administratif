@@ -25,50 +25,18 @@
     text-align: center;
     margin-bottom: 1rem;
 }
-.btn-valider {
-    display: block;
-    margin: 2rem auto;
-    padding: 0.5rem 2rem;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 0.25rem;
-    cursor: pointer;
-    &:hover {
-       transform: translate(-3px);
-       -webkit-transform: translate(-3px);
-       -moz-transform: translate(-3px);
-       -ms-transform: translate(-3px);
-       -o-transform: translate(-3px);
+.card{
+    
 }
+.card-body{
+    padding: 0;
+    margin: 0;
 }
-.form-field-row label{
-    color: black;
-    margin-right: 100%;
+.btn{
+    width: 100%;
+    margin-top: 1rem;
 }
-.form-field-row input{
-   height: 2rem;
-   background: white;
-}
-.form-field-row select{
-    height: 2rem;
-}
-.btnn{
-    background-color: green;
-    height: auto;
-    text-align: center;
-    justify-content: center;
-}
-.demande-sectionn {
-    width: 30%;
-    background-color: #D9D9D9;
-    padding: 2rem;
-    border-radius: 1rem;
-    -webkit-border-radius: 1rem;
-    -moz-border-radius: 1rem;
-    -ms-border-radius: 1rem;
-    -o-border-radius: 1rem;
-}
+
 
 </style>
     <div class="container3">
@@ -122,19 +90,8 @@
             </div>
 
         <div class="demande-form">
-            <h2>Formulaire de demande</h2>
-
-
-
-
-<div class="container mt-4">
-    <h1 class="mb-4">Créer une nouvelle demande de service</h1>
-
-   
-
-
-<div class="container mt-4">
-    <h1 class="mb-4">Créer une nouvelle demande de service</h1>
+            
+            
 
     {% for message in app.flashes('success') %}
         <div class="alert alert-success">
@@ -145,42 +102,42 @@
     <div class="card">
         <div class="card-body">
             {{ form_start(form) }}
-            
-            <div class="row">
-                <div class="col-md-6">
+
+
+                <div class="col-md-6" >
                     {{ form_row(form.ref) }}
                 </div>
                 <div class="col-md-6">
                     {{ form_row(form.demandeur) }}
                 </div>
-            </div>
             
-            <div class="row">
+            
+            
                 <div class="col-md-6">
                     {{ form_row(form.type) }}
                 </div>
                 <div class="col-md-6">
                     {{ form_row(form.centre) }}
                 </div>
-            </div>
             
-            <div class="row">
-                <div class="col-md-4">
+            
+            
+                <div class="col-md-6">
                     {{ form_row(form.statut) }}
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                     {{ form_row(form.priorite) }}
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                     {{ form_row(form.canal) }}
                 </div>
-            </div>
             
-            <div class="row">
+            
+            
                 <div class="col-md-6">
                     {{ form_row(form.montant) }}
                 </div>
-            </div>
+           
             
             <div class="mt-3">
                 <button type="submit" class="btn btn-primary">Créer la demande</button>
