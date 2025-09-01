@@ -1,84 +1,209 @@
 {% extends 'navAdministration.html.twig' %}
 
-{% block title %}Hello ReceptionController!{% endblock %}
+{% block title %}Archives des Demandes{% endblock %}
 
 {% block body %}
- <title>File de réception - Liste des demandes</title>
-    <style>
-       
-        h1 {
-            text-align: center;
-            font-size: 2.5em;
-            margin-top: 20px;
-            color: #1a1a1a;
-        }
-        .table-reception {
-            border-collapse: separate;
-            border-spacing: 0;
-            width: 80%;
-            margin: 30px auto;
-            background: rgba(255,255,255,0.85);
-            box-shadow: 0 2px 10px #adbfc8;
-            border-radius: 12px;
-        }
-        .table-reception th, .table-reception td {
-            padding: 18px;
-            text-align: center;
-            border-bottom: 1px solid #c5e1ed;
-        }
-        .table-reception th {
-            background: #e3d2d2;
-            font-weight: 600;
-            font-size: 20px;
-            color: #3d3838;
-        }
-        .btn-voir {
-            background: #a66a23;
-            color: white;
-            padding: 10px 35px;
-            border: none;
-            border-radius: 17px;
-            font-size: 18px;
-            cursor: pointer;
-            margin: 4px 0;
-            transition: background .2s;
-        }
-        .btn-voir:hover {
-            background: #c98e47;
-        }
-        input[type="checkbox"] {
-            width: 28px;
-            height: 28px;
-            accent-color: #8b8b8b;
-            border-radius: 6px;
-            box-shadow: 0 1px 4px #a3b6c5;
-        }
-    </style>
-</head>
-<body>
-    <h1>File de réception</h1>
-    <table class="table-reception">
-        <thead>
-            <tr>
-                <th>Nom document</th>
-                <th>Voir le document</th>
-                <th>Validé</th>
-                <th>Refusé</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for request in requests %}
-                <tr>
-                    <td>{{ request.nomDocument }}</td>
-                    <td><button class="btn-voir">Voir</button></td>
-                    <td><input type="checkbox" {% if request.valide %}checked{% endif %} disabled></td>
-                    <td><input type="checkbox" {% if request.refuse %}checked{% endif %} disabled></td>
-                </tr>
-            {% else %}
-                <tr>
-                    <td colspan="4">Aucune demande trouvée.</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="card-title mb-0">
+                        <i class="fas fa-archive me-2"></i>
+                        Archives des Demandes
+                    </h3>
+                </div>
+                <div class="card-body">
+                    {% for message in app.flashes('success') %}
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+
+                    {% if archives|length > 0 %}
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Référence</th>
+                                        <th>Demandeur</th>
+                                        <th>Type</th>
+                                        <th>Centre</th>
+                                        <th>Priorité</th>
+                                        <th>Montant</th>
+                                        <th>Canal</th>
+                                        <th>Date création</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for archive in archives %}
+                                        <tr>
+                                            <td>{{ archive.ref }}</td>
+                                            <td>
+                                                {% if archive.demandeur %}
+                                                    {{ archive.demandeur.prenoms }} {{ archive.demandeur.nom }}
+                                                {% else %}
+                                                    Non spécifié
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if archive.type %}
+                                                    {{ archive.type.libelle }}
+                                                {% else %}
+                                                    Non spécifié
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ archive.centre }}</td>
+                                            <td>
+                                                {% if archive.priorite == 1 %}
+                                                    <span class="badge bg-danger">Urgente</span>
+                                                {% else %}
+                                                    <span class="badge bg-secondary">Normale</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ archive.montant|number_format(2, ',', ' ') }} MGA</td>
+                                            <td>
+                                                {% if archive.canal == 'en_ligne' %}
+                                                    <span class="badge bg-info">En ligne</span>
+                                                {% elseif archive.canal == 'guichet' %}
+                                                    <span class="badge bg-warning">Guichet</span>
+                                                {% elseif archive.canal == 'telephone' %}
+                                                    <span class="badge bg-success">Téléphone</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ archive.createdAt|date('d/m/Y H:i') }}</td>
+                                            <td>
+                                                <div class="btn-group" role="group">
+                                                    <a href="{{ path('app_restore_request', {'id': archive.id}) }}" 
+                                                       class="btn btn-sm btn-success" 
+                                                       title="Restaurer"
+                                                       onclick="return confirm('Êtes-vous sûr de vouloir restaurer cette demande ?')">
+                                                        <i class="fas fa-undo"></i>
+                                                    </a>
+                                                    <a href="#" 
+                                                       class="btn btn-sm btn-info" 
+                                                       title="Voir les détails"
+                                                       data-bs-toggle="modal" 
+                                                       data-bs-target="#detailModal{{ archive.id }}">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                                </div>
+
+                                                <!-- Modal pour les détails -->
+                                                <div class="modal fade" id="detailModal{{ archive.id }}" tabindex="-1" aria-hidden="true">
+                                                    <div class="modal-dialog modal-lg">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header bg-primary text-white">
+                                                                <h5 class="modal-title">Détails de la demande</h5>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <strong>Référence:</strong> {{ archive.ref }}
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <strong>Statut:</strong> 
+                                                                        <span class="badge bg-secondary">Archivé</span>
+                                                                    </div>
+                                                                </div>
+                                                                <hr>
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <strong>Demandeur:</strong> 
+                                                                        {% if archive.demandeur %}
+                                                                            {{ archive.demandeur.prenoms }} {{ archive.demandeur.nom }}
+                                                                        {% else %}
+                                                                            Non spécifié
+                                                                        {% endif %}
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <strong>Type:</strong> 
+                                                                        {% if archive.type %}
+                                                                            {{ archive.type.libelle }}
+                                                                        {% else %}
+                                                                            Non spécifié
+                                                                        {% endif %}
+                                                                    </div>
+                                                                </div>
+                                                                <hr>
+                                                                <div class="row">
+                                                                    <div class="col-md-4">
+                                                                        <strong>Centre:</strong> {{ archive.centre }}
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <strong>Priorité:</strong> 
+                                                                        {% if archive.priorite == 1 %}
+                                                                            <span class="badge bg-danger">Urgente</span>
+                                                                        {% else %}
+                                                                            <span class="badge bg-secondary">Normale</span>
+                                                                        {% endif %}
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <strong>Montant:</strong> {{ archive.montant|number_format(2, ',', ' ') }} MGA
+                                                                    </div>
+                                                                </div>
+                                                                <hr>
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <strong>Canal:</strong> 
+                                                                        {% if archive.canal == 'en_ligne' %}
+                                                                            En ligne
+                                                                        {% elseif archive.canal == 'guichet' %}
+                                                                            Guichet
+                                                                        {% elseif archive.canal == 'telephone' %}
+                                                                            Téléphone
+                                                                        {% endif %}
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <strong>Créée le:</strong> {{ archive.createdAt|date('d/m/Y H:i') }}
+                                                                    </div>
+                                                                </div>
+                                                                <hr>
+                                                                <div class="row">
+                                                                    <div class="col-12">
+                                                                        <strong>Modifiée le:</strong> {{ archive.updatedAt|date('d/m/Y H:i') }}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info text-center">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Aucune demande archivée pour le moment.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block stylesheets %}
+<style>
+    .table th {
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+    .badge {
+        font-size: 0.75rem;
+    }
+    .btn-group .btn {
+        margin-right: 0.25rem;
+    }
+</style>
 {% endblock %}

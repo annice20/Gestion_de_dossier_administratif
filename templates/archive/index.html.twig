@@ -1,0 +1,52 @@
+{% extends 'navAdministration.html.twig' %}
+
+{% block title %}Archives des requêtes{% endblock %}
+
+{% block body %}
+      <div class="d-flex justify-content-between align-items-center mb-3 mt-3">
+    <h3 class="card-title mb-0">
+        <i class="fas fa-archive me-2"></i>
+        Archives des Demandes
+    </h3>
+    <div>
+        <a href="{{ path('app_archive_all_requests') }}" 
+           class="btn btn-warning me-2"
+           onclick="return confirm('Êtes-vous sûr de vouloir archiver toutes les demandes ? Cette action est irréversible.')">
+            <i class="fas fa-archive me-1"></i>Tout archiver
+        </a>
+        <a href="{{ path('services_liste_index') }}" class="btn btn-primary">
+            <i class="fas fa-plus me-1"></i>Nouvelle demande
+        </a>
+    </div>
+</div>
+
+    <table border="1" cellpadding="5" cellspacing="0" class="table">
+        <thead>
+            <tr>
+                <th>Référence</th>
+                <th>Demandeur</th>
+                <th>Type</th>
+                <th>Centre</th>
+                <th>Statut</th>
+                <th>Date création</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for req in archives %}
+            <tr>
+                <td>{{ req.ref }}</td>
+                <td>{{ req.demandeur.nom ?? 'N/A' }}</td>
+                <td>{{ req.type.nom ?? 'N/A' }}</td>
+                <td>{{ req.centre }}</td>
+                <td>{{ req.statut }}</td>
+                <td>{{ req.createdAt|date('d/m/Y H:i') }}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">⚠️ Aucune archive trouvée</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+  
+{% endblock %}
