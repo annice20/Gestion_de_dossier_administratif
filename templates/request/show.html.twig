@@ -3,6 +3,81 @@
 {% block title %}Détails demande {{ request.ref }}{% endblock %}
 
 {% block body %}
+{% block stylesheets %}
+
+
+<style>
+ 
+
+  h1 {
+    text-align: center;
+    font-weight: 700;
+    font-size: 2.5em;
+    margin-bottom: 30px;
+    color: #34495e;
+  }
+
+  p {
+    font-size: 1.1em;
+    margin: 12px 0;
+    color: #555;
+  }
+
+  form {
+    margin: 30px auto;
+    padding: 25px 35px;
+    max-width: 450px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 10px 35px rgba(0,0,0,0.1);
+    text-align: center;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 18px;
+    font-size: 1.2em;
+    cursor: pointer;
+    color: #34495e;
+  }
+
+  input[type="radio"] {
+    margin-right: 12px;
+    cursor: pointer;
+    transform: scale(1.4);
+    vertical-align: middle;
+  }
+
+  button.btn-primary {
+    background-color: #9c661f;
+    color: #fff;
+    border: none;
+    padding: 12px 28px;
+    font-size: 1.1em;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  button.btn-primary:hover {
+    background-color: #704a10;
+  }
+
+  a {
+    display: block;
+    text-align: center;
+    margin: 25px auto 0;
+    color: #9c661f;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 1.1em;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+</style>
+{% endblock %}
 <h1>Détails de la demande {{ request.ref }}</h1>
 
 <p><strong>Demandeur :</strong> {{ request.demandeur.nom ?? 'N/A' }} {{ request.demandeur.prenom ?? '' }}</p>
