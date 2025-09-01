@@ -1,0 +1,77 @@
+{% extends 'navAdministration.html.twig' %}
+
+
+
+{% block title %}File de réception{% endblock %}
+
+{% block stylesheets %}
+<style>
+  table {
+    width: 80%;
+    margin: auto;
+    border-collapse: collapse;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 0 8px #999;
+  }
+  th, td {
+    border: 1px solid #999;
+    padding: 12px 15px;
+  }
+  th {
+    background-color: #c9a465;
+    font-weight: bold;
+  }
+  .btn-voir {
+    background-color: #a56a00;
+    border: none;
+    color: white;
+    padding: 7px 15px;
+    cursor: pointer;
+    border-radius: 6px;
+    text-decoration: none;
+  }
+  .btn-voir:hover {
+    background-color: #7a4e00;
+  }
+  input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+  }
+</style>
+{% endblock %}
+
+{% block body %}
+<h1 style="text-align:center; font-weight: bold; margin: 40px 0;">File de réception</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Référence</th>
+      <th>Demandeur</th>
+      <th>Type</th>
+      <th>Voir le document</th>
+      <th>Validé</th>
+      <th>Refusé</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for request in requests %}
+      <tr>
+        <td>{{ request.ref }}</td>
+        <td>{{ request.demandeur.nom ?? 'N/A' }} {{ request.demandeur.prenom ?? '' }}</td>
+        <td>{{ request.type.libelle ?? 'N/A' }}</td>
+        <td>
+          <a href="{{ path('request_show', {'id': request.id}) }}" class="btn-voir">Voir</a>
+        </td>
+        <td><input type="checkbox" disabled {{ request.statut == 'Validé' ? 'checked' : '' }} ></td>
+        <td><input type="checkbox" disabled {{ request.statut == 'Refusé' ? 'checked' : '' }} ></td>
+      </tr>
+    {% else %}
+      <tr>
+        <td colspan="6">Aucune demande dans la file d'attente.</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
