@@ -16,9 +16,6 @@ class Document
     #[ORM\Column]
     private ?int $id = null;
 
-    /**
-     * @var Collection<int, Request>
-     */
     #[ORM\ManyToOne(targetEntity: Request::class, inversedBy: 'document')]
     private Collection $request;
 
@@ -37,43 +34,39 @@ class Document
     #[ORM\Column(type: Types::TEXT)]
     private ?string $qr_payload = null;
 
+    // --- Champs ajoutés pour le tableau de bord ---
+
+    #[ORM\Column(length: 255)]
+    private ?string $status = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $dateReception = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $dueDate = null;
+
+    // --- Fin des champs ajoutés ---
+
     public function __construct()
     {
-        $this->request_id = new ArrayCollection();
+        $this->request = new ArrayCollection();
     }
+
+    // --- Getters and Setters existants ---
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return Collection<int, Request>
-     */
-    public function getRequestId(): Collection
+    public function getRequest(): Collection
     {
-        return $this->request_id;
+        return $this->request;
     }
 
-    public function addRequestId(Request $requestId): static
+    public function setRequest(Collection $request): static
     {
-        if (!$this->request_id->contains($requestId)) {
-            $this->request_id->add($requestId);
-            $requestId->setDocument($this);
-        }
-
-        return $this;
-    }
-
-    public function removeRequestId(Request $requestId): static
-    {
-        if ($this->request_id->removeElement($requestId)) {
-            // set the owning side to null (unless already changed)
-            if ($requestId->getDocument() === $this) {
-                $requestId->setDocument(null);
-            }
-        }
-
+        $this->request = $request;
         return $this;
     }
 
@@ -85,7 +78,6 @@ class Document
     public function setType(string $type): static
     {
         $this->type = $type;
-
         return $this;
     }
 
@@ -97,7 +89,6 @@ class Document
     public function setVersion(string $version): static
     {
         $this->version = $version;
-
         return $this;
     }
 
@@ -109,7 +100,6 @@ class Document
     public function setUrlPdf(string $url_pdf): static
     {
         $this->url_pdf = $url_pdf;
-
         return $this;
     }
 
@@ -121,7 +111,6 @@ class Document
     public function setHash(string $hash): static
     {
         $this->hash = $hash;
-
         return $this;
     }
 
@@ -133,7 +122,41 @@ class Document
     public function setQrPayload(string $qr_payload): static
     {
         $this->qr_payload = $qr_payload;
+        return $this;
+    }
 
+    // --- Getters and Setters pour les nouveaux champs ---
+    
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?string $status): static
+    {
+        $this->status = $status;
+        return $this;
+    }
+
+    public function getDateReception(): ?\DateTimeInterface
+    {
+        return $this->dateReception;
+    }
+
+    public function setDateReception(\DateTimeInterface $dateReception): static
+    {
+        $this->dateReception = $dateReception;
+        return $this;
+    }
+
+    public function getDueDate(): ?\DateTimeInterface
+    {
+        return $this->dueDate;
+    }
+
+    public function setDueDate(?\DateTimeInterface $dueDate): static
+    {
+        $this->dueDate = $dueDate;
         return $this;
     }
 }
