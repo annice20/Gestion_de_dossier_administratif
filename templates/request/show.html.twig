@@ -1,0 +1,28 @@
+{% extends 'navAdministration.html.twig' %}
+
+{% block title %}Détails demande {{ request.ref }}{% endblock %}
+
+{% block body %}
+<h1>Détails de la demande {{ request.ref }}</h1>
+
+<p><strong>Demandeur :</strong> {{ request.demandeur.nom ?? 'N/A' }} {{ request.demandeur.prenom ?? '' }}</p>
+<p><strong>Type :</strong> {{ request.type.libelle ?? 'N/A' }}</p>
+<p><strong>Statut :</strong> {{ request.statut }}</p>
+<p><strong>Date de création :</strong> {{ request.createdAt ? request.createdAt|date('d/m/Y H:i') : 'N/A' }}</p>
+
+<form method="post" action="{{ path('request_update_statut', {'id': request.id}) }}">
+    <label>
+        <input type="radio" name="statut" value="Validé" {{ request.statut == 'Validé' ? 'checked' : '' }}> Valider
+    </label>
+    <label>
+        <input type="radio" name="statut" value="Refusé" {{ request.statut == 'Refusé' ? 'checked' : '' }}> Refuser
+    </label>
+    <label>
+        <input type="radio" name="statut" value="" {{ request.statut is empty ? 'checked' : '' }}> Aucun
+    </label>
+
+    <button type="submit" class="btn btn-primary">Enregistrer</button>
+</form>
+
+<a href="{{ path('fil_attente_index') }}">Retour à la file d'attente</a>
+{% endblock %}
