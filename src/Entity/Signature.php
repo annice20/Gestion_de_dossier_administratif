@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\SignatureRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: SignatureRepository::class)]
@@ -13,34 +14,24 @@ class Signature
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\OneToOne(inversedBy: 'signature', cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
-    private ?Decision $decision = null;
-
-    #[ORM\Column(length: 20)]
+    #[ORM\Column(length: 255)]
     private ?string $type = null;
 
-    #[ORM\Column(length: 100)]
+    #[ORM\Column(length: 255)]
+    private ?string $certificat = null;
+
+    #[ORM\Column(length: 255)]
     private ?string $scelle = null;
 
-    #[ORM\Column(type: 'datetime_immutable')]
-    private ?\DateTimeImmutable $horodatage = null;
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $horodatage = null;
+
+    #[ORM\OneToOne(inversedBy: 'signature', cascade: ['persist', 'remove'])]
+    private ?Decision $decision = null;
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getDecision(): ?Decision
-    {
-        return $this->decision;
-    }
-
-    public function setDecision(Decision $decision): static
-    {
-        $this->decision = $decision;
-
-        return $this;
     }
 
     public function getType(): ?string
@@ -51,6 +42,18 @@ class Signature
     public function setType(string $type): static
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    public function getCertificat(): ?string
+    {
+        return $this->certificat;
+    }
+
+    public function setCertificat(string $certificat): static
+    {
+        $this->certificat = $certificat;
 
         return $this;
     }
@@ -67,14 +70,26 @@ class Signature
         return $this;
     }
 
-    public function getHorodatage(): ?\DateTimeImmutable
+    public function getHorodatage(): ?\DateTimeInterface
     {
         return $this->horodatage;
     }
 
-    public function setHorodatage(\DateTimeImmutable $horodatage): static
+    public function setHorodatage(\DateTimeInterface $horodatage): static
     {
         $this->horodatage = $horodatage;
+
+        return $this;
+    }
+
+    public function getDecision(): ?Decision
+    {
+        return $this->decision;
+    }
+
+    public function setDecision(?Decision $decision): static
+    {
+        $this->decision = $decision;
 
         return $this;
     }
