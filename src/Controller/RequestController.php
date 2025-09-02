@@ -13,7 +13,12 @@ class RequestController extends AbstractController
     #[Route('/demande/{id}', name: 'request_show')]
     public function show(Request $requestEntity): Response
     {
-        return $this->render('request/show.html.twig', ['request' => $requestEntity]);
+        $attachments = $requestEntity->getAttachments();
+
+        return $this->render('request/show.html.twig', [
+            'request' => $requestEntity,
+            'attachments' => $attachments,
+        ]);
     }
 
     #[Route('/demande/{id}/update-statut', name: 'request_update_statut', methods: ['POST'])]
