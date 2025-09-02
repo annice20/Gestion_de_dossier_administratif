@@ -3,9 +3,45 @@
 {% block title %}Liste des Services{% endblock %}
 
 {% block body %}
-    <div class="container2">
+<style>
+
+.container3{
+    display: flex;
+    gap: 4rem;
+    margin: 0 auto;
+    top: 0;
+    justify-content: center;
+    padding: 1rem;
+}
+.header3{
+    text-align: center;
+    margin-bottom: 1rem;
+}
+.table {
+    height: 25rem;
+}
+
+.demande-header2 {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+.card{
+    
+}
+.card-body{
+    padding: 0;
+    margin: 0;
+}
+.btn{
+    width: 100%;
+    margin-top: 1rem;
+}
+
+
+</style>
+    <div class="container3">
         <div class="service-table">
-            <div class="header2">
+            <div class="header3">
                 <h1>LISTE DES SERVICES</h1>
             </div>
             <table class="table table-bordered">
@@ -48,94 +84,91 @@
             </table>
         </div>
 
-        <div class="demande-section">
-            <div class="demande-header">
+        <div class="demande-sectionn">
+            <div class="demande-header2">
                 <h1>DEMANDE</h1>
             </div>
 
+        <div class="demande-form">
+            
+            
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+    {% endfor %}
+
+    <div class="card">
+        <div class="card-body">
             {{ form_start(form) }}
 
-            <div class="form-group">
-                <div class="form-field-row ">
-                    {{ form_label(form.ref) }}
-                    {{ form_widget(form.ref, {'attr': {'class': 'form-control'}}) }}
-                    {{ form_errors(form.ref) }}
+
+                <div class="col-md-6" >
+                    {{ form_row(form.ref) }}
                 </div>
-                <div class="form-field-row ">
-                    {{ form_label(form.demandeurs) }}
-                    {{ form_widget(form.demandeurs, {'attr': {'class': 'form-control'}}) }}
-                    {{ form_errors(form.demandeurs) }}
+                <div class="col-md-6">
+                    {{ form_row(form.demandeur) }}
                 </div>
             
-
-
-                <div class="form-field-row ">
-                    {{ form_label(form.statut) }}
-                    {{ form_widget(form.statut, {'attr': {'class': 'form-select'}}) }}
-                    {{ form_errors(form.statut) }}
+            
+            
+                <div class="col-md-6">
+                    {{ form_row(form.type) }}
                 </div>
-                <div class="form-field-row ">
-                    {{ form_label(form.centre) }}
-                    {{ form_widget(form.centre, {'attr': {'class': 'form-control'}}) }}
-                    {{ form_errors(form.centre) }}
+                <div class="col-md-6">
+                    {{ form_row(form.centre) }}
                 </div>
             
-
-
-                <div class="form-field-row ">
-                    {{ form_label(form.priorite) }}
-                    {{ form_widget(form.priorite, {'attr': {'class': 'form-select'}}) }}
-                    {{ form_errors(form.priorite) }}
+            
+            
+                <div class="col-md-6">
+                    {{ form_row(form.statut) }}
                 </div>
-                <div class="form-field-row ">
-                    {{ form_label(form.montant) }}
-                    {{ form_widget(form.montant, {'attr': {'class': 'form-control'}}) }}
-                    {{ form_errors(form.montant) }}
+                <div class="col-md-6">
+                    {{ form_row(form.priorite) }}
+                </div>
+                <div class="col-md-6">
+                    {{ form_row(form.canal) }}
                 </div>
             
-
-
-                <div class="form-field-row ">
-                    {{ form_label(form.canal) }}
-                    {{ form_widget(form.canal, {'attr': {'class': 'form-select'}}) }}
-                    {{ form_errors(form.canal) }}
-                </div>
-{#
-                <div class="form-field-row ">
-                    {{ form_label(form.attachment) }}
-                    {{ form_widget(form.attachment, {'attr': {'class': 'form-select'}}) }}
-                    {{ form_errors(form.attachment) }}
-                </div>
             
-
-
-                <div class="form-field-row ">
-                    {{ form_label(form.document) }}
-                    {{ form_widget(form.document, {'attr': {'class': 'form-select'}}) }}
-                    {{ form_errors(form.document) }}
-                </div>
-                <div class="form-field-row ">
-                    {{ form_label(form.task) }}
-                    {{ form_widget(form.task, {'attr': {'class': 'form-select'}}) }}
-                    {{ form_errors(form.task) }}
-                </div>
             
-
-                <div class="form-field-row ">
-                    {{ form_label(form.payment) }}
-                    {{ form_widget(form.payment, {'attr': {'class': 'form-select'}}) }}
-                    {{ form_errors(form.payment) }}
+                <div class="col-md-6">
+                    {{ form_row(form.montant) }}
                 </div>
-                <div class="form-field-row ">
-                    {{ form_label(form.decision) }}
-                    {{ form_widget(form.decision, {'attr': {'class': 'form-select'}}) }}
-                    {{ form_errors(form.decision) }}
-                </div>
+           
+            
+            <div class="mt-3">
+                <button type="submit" class="btn btn-primary">Créer la demande</button>
+                <a href="{{ path('services_liste_index') }}" class="btn btn-secondary">Annuler</a>
             </div>
-#}
-            <button type="submit" class="btn btn-primary">Valider</button>
-
+            
             {{ form_end(form) }}
         </div>
     </div>
+</div>
+
+{% if form.type.vars.choices is not empty %}
+<script>
+// Script optionnel pour améliorer l'expérience utilisateur
+document.addEventListener('DOMContentLoaded', function() {
+    // Vous pourriez ajouter ici du JavaScript pour:
+    // - Charger dynamiquement les informations sur le type de demande sélectionné
+    // - Afficher les pièces requises pour le type sélectionné
+    // - etc.
+    
+    const typeSelect = document.getElementById('{{ form.type.vars.id }}');
+    if (typeSelect) {
+        typeSelect.addEventListener('change', function() {
+            // Exemple: charger les détails du type de demande
+            console.log('Type sélectionné:', this.value);
+            // Ici vous pourriez faire un appel AJAX pour récupérer les infos
+        });
+    }
+});
+</script>
+{% endif %}
+
+
 {% endblock %}

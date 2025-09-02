@@ -6,7 +6,7 @@
     {{ form_start(form) }}
 
     <div class="form-wrapper">
-        <!-- Partie Décision -->
+       
         <div class="form-section left">
             <h2>Décision</h2>
             {{ form_row(form.request, {'label': 'Demande associée'}) }} 
@@ -16,7 +16,7 @@
             {{ form_row(form.valideLe, {'label': 'Validé le'}) }}
         </div>
 
-        <!-- Partie Signature -->
+        
         <div class="form-section right">
             <h2>Signature</h2>
             {{ form_row(form.signature.type, {'label': 'Type de signature'}) }}

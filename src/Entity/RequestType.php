@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Repository\RequestTypeRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity(repositoryClass: RequestTypeRepository::class)]
 class RequestType
@@ -32,10 +34,13 @@ class RequestType
     #[ORM\Column(type: Types::TEXT)]
     private ?string $workflow = null;
 
-    #[ORM\ManyToOne(inversedBy: 'type_id')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Request $request = null;
+    #[ORM\OneToMany(mappedBy: 'requestType', targetEntity: Request::class)]
+    private Collection $requests;
 
+    public function __construct()
+    {
+        $this->requests = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -50,7 +55,6 @@ class RequestType
     public function setCode(string $code): static
     {
         $this->code = $code;
-
         return $this;
     }
 
@@ -62,31 +66,30 @@ class RequestType
     public function setLibelle(string $libelle): static
     {
         $this->libelle = $libelle;
-
         return $this;
     }
 
-    public function getSchemaFormulaire(): ?string
+    // --------- JSON : Schema Formulaire ---------
+    public function getSchemaFormulaire(): ?array
     {
-        return $this->schema_formulaire;
+        return $this->schema_formulaire ? json_decode($this->schema_formulaire, true) : null;
     }
 
-    public function setSchemaFormulaire(string $schema_formulaire): static
+    public function setSchemaFormulaire(array $schema_formulaire): self
     {
-        $this->schema_formulaire = $schema_formulaire;
-
+        $this->schema_formulaire = json_encode($schema_formulaire, JSON_UNESCAPED_UNICODE);
         return $this;
     }
 
-    public function getPieceRequise(): ?string
+    // --------- JSON : Pièce requise ---------
+    public function getPieceRequise(): ?array
     {
-        return $this->piece_requise;
+        return $this->piece_requise ? json_decode($this->piece_requise, true) : null;
     }
 
-    public function setPieceRequise(string $piece_requise): static
+    public function setPieceRequise(array $piece_requise): static
     {
-        $this->piece_requise = $piece_requise;
-
+        $this->piece_requise = json_encode($piece_requise, JSON_UNESCAPED_UNICODE);
         return $this;
     }
 
@@ -98,31 +101,46 @@ class RequestType
     public function setDelaisCible(int $delais_cible): static
     {
         $this->delais_cible = $delais_cible;
-
         return $this;
     }
 
-    public function getWorkflow(): ?string
+    // --------- JSON : Workflow ---------
+    public function getWorkflow(): ?array
     {
-        return $this->workflow;
+        return $this->workflow ? json_decode($this->workflow, true) : null;
     }
 
-    public function setWorkflow(string $workflow): static
+    public function setWorkflow(array $workflow): static
     {
-        $this->workflow = $workflow;
-
+        $this->workflow = json_encode($workflow, JSON_UNESCAPED_UNICODE);
         return $this;
     }
 
-    public function getRequest(): ?Request
+    // --------- Relation Request ---------
+    /**
+     * @return Collection<int, Request>
+     */
+    public function getRequests(): Collection
     {
-        return $this->request;
+        return $this->requests;
     }
 
-    public function setRequest(?Request $request): static
+    public function addRequest(Request $request): static
     {
-        $this->request = $request;
+        if (!$this->requests->contains($request)) {
+            $this->requests->add($request);
+            $request->setRequestType($this);
+        }
+        return $this;
+    }
 
+    public function removeRequest(Request $request): static
+    {
+        if ($this->requests->removeElement($request)) {
+            if ($request->getRequestType() === $this) {
+                $request->setRequestType(null);
+            }
+        }
         return $this;
     }
 }

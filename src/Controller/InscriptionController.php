@@ -6,6 +6,8 @@ use App\Entity\User;
 use App\Entity\UserRole;
 use App\Entity\CitizenProfile;
 use App\Form\RegistrationProfilType;
+use App\Repository\UserRepository;
+use App\Entity\CodeValidation;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,6 +19,12 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class InscriptionController extends AbstractController
 {
+    private $repositoryuser;
+
+    public function __construct(UserRepository $repositoryuser) {
+        $this->repositoryuser = $repositoryuser;
+    }
+    
     #[Route('/inscription', name: 'app_inscription')]
     public function register(
         Request $request,
@@ -29,15 +37,22 @@ class InscriptionController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
-
             // Créer l'utilisateur
             $user = new User();
-            $user->setEmail($data['email']);
-            $hashedPassword = $passwordHasher->hashPassword($user, $data['hashMdp']);
-            $user->setHashMdp($hashedPassword);
-            $user->setTelephone($data['telephone']);
-            $user->setLangue($data['langue']);
+            $user->setEmail($form->get('email')->getData());
+            // Récupère le mot de passe en clair du formulaire
+            $plainPassword = $form->get('password')->getData();
+
+            // Hache le mot de passe et le définit sur l'entité
+            $user->setPassword(
+                $passwordHasher->hashPassword(
+                    $user,
+                    $plainPassword
+                )
+            );
+            
+            $user->setTelephone($form->get('telephone')->getData());
+            $user->setLangue($form->get('langue')->getData());
             $user->setStatut('actif');
             $user->setTwoFAEnabled(false);
             $user->setCreatedAt(new \DateTime());
@@ -58,12 +73,12 @@ class InscriptionController extends AbstractController
             // Créer le profil
             $citizen = new CitizenProfile();
             $citizen->setUser($user);
-            $citizen->setNom($data['nom']);
-            $citizen->setPrenoms($data['prenoms']);
-            $citizen->setDateDeNaissance($data['dateDeNaissance']);
-            $citizen->setNin($data['nin']);
-            $citizen->setAdresse($data['adresse']);
-            $citizen->setCommune($data['commune']);
+            $citizen->setNom($form->get('nom')->getData());
+            $citizen->setPrenoms($form->get('prenoms')->getData());
+            $citizen->setDateDeNaissance($form->get('dateDeNaissance')->getData());
+            $citizen->setNin($form->get('nin')->getData());
+            $citizen->setAdresse($form->get('adresse')->getData());
+            $citizen->setCommune($form->get('commune')->getData());
 
             $entityManager->persist($citizen);
             $entityManager->flush();
@@ -77,13 +92,27 @@ class InscriptionController extends AbstractController
                 ->text("Votre code de validation est : $codeValidation");
             $mailer->send($email);
 
+            // Stocker le code dans la table code_validation
+            $validationCode = new CodeValidation();
+            $validationCode->setUser($user);
+            $validationCode->setCode($codeValidation);
+            $validationCode->setCreatedAt(new \DateTime());
+            $validationCode->setExpiresAt((new \DateTime())->modify('+15 minutes'));
+            $validationCode->setIsUsed(false);
+
+            $entityManager->persist($validationCode);
+            $entityManager->flush();
+
             $this->addFlash('success', 'Inscription et profil enregistrés ! Un code de validation a été envoyé par email.');
 
             return $this->redirectToRoute('app_inscription');
         }
 
+        $lastUser = $this->repositoryuser->findOneBy([], ['id' => 'DESC']);
+        
         return $this->render('inscription/index.html.twig', [
             'formInscription' => $form->createView(),
+            'lastUser' => $lastUser,
         ]);
     }
 }

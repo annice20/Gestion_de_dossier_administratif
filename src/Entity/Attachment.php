@@ -3,10 +3,9 @@
 namespace App\Entity;
 
 use App\Repository\AttachmentRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
 
 #[ORM\Entity(repositoryClass: AttachmentRepository::class)]
 class Attachment
@@ -16,11 +15,8 @@ class Attachment
     #[ORM\Column]
     private ?int $id = null;
 
-    /**
-     * @var Collection<int, Request>
-     */
-    #[ORM\OneToMany(targetEntity: Request::class, mappedBy: 'attachment')]
-    private Collection $request_id;
+    #[ORM\ManyToOne(targetEntity: Request::class, inversedBy: 'attachments')]
+    private ?Request $request = null;
 
     #[ORM\Column(length: 50)]
     private ?string $type_piece = null;
@@ -40,42 +36,40 @@ class Attachment
     #[ORM\Column(length: 20)]
     private ?string $verif_statut = null;
 
-    public function __construct()
+    // Champ temporaire pour gérer le fichier uploadé (non persisté)
+    private ?File $file = null;
+
+    public function getFile(): ?File
     {
-        $this->request_id = new ArrayCollection();
+        return $this->file;
     }
+
+    public function setFile(?File $file = null): void
+    {
+        $this->file = $file;
+
+        if ($file) {
+            // Rempli nom_fichier et taille automatiquement à partir du fichier uploadé
+            $this->nom_fichier = $file->getClientOriginalName();
+            $this->taille = $file->getSize();
+        }
+    }
+
+    // Getters et setters standards
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return Collection<int, Request>
-     */
-    public function getRequestId(): Collection
+    public function getRequest(): ?Request
     {
-        return $this->request_id;
+        return $this->request;
     }
 
-    public function addRequestId(Request $requestId): static
+    public function setRequest(?Request $request): static
     {
-        if (!$this->request_id->contains($requestId)) {
-            $this->request_id->add($requestId);
-            $requestId->setAttachment($this);
-        }
-
-        return $this;
-    }
-
-    public function removeRequestId(Request $requestId): static
-    {
-        if ($this->request_id->removeElement($requestId)) {
-            // set the owning side to null (unless already changed)
-            if ($requestId->getAttachment() === $this) {
-                $requestId->setAttachment(null);
-            }
-        }
+        $this->request = $request;
 
         return $this;
     }
@@ -131,6 +125,7 @@ class Attachment
     public function getTaille(): ?int
     {
         return $this->taille;
+
     }
 
     public function setTaille(int $taille): static
