@@ -151,7 +151,7 @@ form {
 
 form > div {
     display: flex;
-    flex-direction: column;
+    /* flex-direction: column; */
 }
 
 label {
