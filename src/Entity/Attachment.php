@@ -125,6 +125,7 @@ class Attachment
     public function getTaille(): ?int
     {
         return $this->taille;
+
     }
 
     public function setTaille(int $taille): static

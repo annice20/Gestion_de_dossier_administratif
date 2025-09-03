@@ -16,28 +16,59 @@ class DocumentRepository extends ServiceEntityRepository
         parent::__construct($registry, Document::class);
     }
 
-    //    /**
-    //     * @return Document[] Returns an array of Document objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('d')
-    //            ->andWhere('d.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('d.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    /**
+     * Compte le nombre total de documents dans la base de données.
+     */
+    public function countAll(): int
+    {
+        return $this->createQueryBuilder('d')
+            ->select('count(d.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 
-    //    public function findOneBySomeField($value): ?Document
-    //    {
-    //        return $this->createQueryBuilder('d')
-    //            ->andWhere('d.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    /**
+     * Compte les documents selon un statut donné.
+     */
+    public function countByStatus(string $status): int
+    {
+        return $this->createQueryBuilder('d')
+            ->select('count(d.id)')
+            ->where('d.status = :status')
+            ->setParameter('status', $status)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+    
+    /**
+     * Compte les documents reçus durant le mois en cours.
+     */
+    public function countReceivedThisMonth(): int
+    {
+        $startOfMonth = new \DateTime('first day of this month');
+        $endOfMonth = new \DateTime('last day of this month');
+        
+        return $this->createQueryBuilder('d')
+            ->select('count(d.id)')
+            ->where('d.dateReception BETWEEN :start AND :end')
+            ->setParameter('start', $startOfMonth)
+            ->setParameter('end', $endOfMonth)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * Compte les documents en retard.
+     */
+    public function countOverdue(): int
+    {
+        return $this->createQueryBuilder('d')
+            ->select('count(d.id)')
+            ->where('d.status = :status')
+            ->andWhere('d.dueDate < :now') 
+            ->setParameter('status', 'en_attente')
+            ->setParameter('now', new \DateTime())
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }

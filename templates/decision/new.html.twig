@@ -1,0 +1,156 @@
+{% extends 'navAdministration.html.twig' %}
+
+{% block body %}
+<style>
+.form-title {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #fff;
+}
+
+.form-wrapper {
+    display: flex;
+    justify-content: space-between; /* espace entre les colonnes */
+    gap: 20px;
+    background-color: rgba(57, 55, 55, 0.9);
+    padding: 30px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 1200px; /* limite la largeur sur grands écrans */
+    margin: 0 auto;
+    flex-wrap: wrap; /* permet de passer en colonne sur petits écrans */
+}
+
+<<<<<<< HEAD
+    .form-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 20px;
+        background-color: rgba(57, 55, 55, 0.7);
+        padding: 30px;
+        border-radius: 8px;
+        width: 70%;
+        margin: 0 auto;
+        
+    }
+
+    
+
+
+    .form-section {
+        flex: 1;
+        background-color: #817e7eff;
+        padding: 20px;
+        border-radius: 5px;
+        color: #fff;
+        height: 12cm;
+    }
+=======
+.form-section {
+    flex: 1 1 45%; /* chaque section prend environ 45% et est flexible */
+    min-width: 300px; /* largeur minimum pour que le contenu reste lisible */
+    padding: 20px;
+    border-radius: 5px;
+    color: #fff;
+}
+
+.form-section h2 {
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 18px;
+    border-bottom: 1px solid #aaa;
+    padding-bottom: 10px;
+}
+>>>>>>> 6632618b23b2e3d57fa8797f14c7426e58a47be4
+
+.form-section label {
+    font-weight: bold;
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 4px;
+}
+
+.form-section input, 
+.form-section select {
+    width: 100%;
+    padding: 8px;
+    border-radius: 4px;
+    border: none;
+    margin-bottom: 12px;
+}
+
+.submit-container {
+    text-align: center;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.btn-submit {
+    background-color: #1e90ff;
+    color: white;
+    border: none;
+    width: 180px;
+    height: 45px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+<<<<<<< HEAD
+    .btn-submit {
+        background-color: #1e90ff;
+        color: white;
+        border: none;
+        width: 4cm;
+        height: 1.5cm;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+        margin-left: 45%;
+    
+    }
+
+    .btn-submit:hover {
+        background-color: #042f58ff;
+    }
+=======
+.btn-submit:hover {
+    background-color: #0056b3;
+}
+>>>>>>> 6632618b23b2e3d57fa8797f14c7426e58a47be4
+</style>
+
+<h1 class="form-title">Décision</h1>
+
+{{ form_start(form) }}
+
+<div class="form-wrapper">
+    <!-- Colonne gauche -->
+    <div class="form-section left">
+        <h2>Décision</h2>
+        {{ form_row(form.request, {'label': 'Demande associée'}) }} 
+        {{ form_row(form.resultat, {'label': 'Résultat'}) }}
+        {{ form_row(form.motif, {'label': 'Motif'}) }}
+        {{ form_row(form.validePar, {'label': 'Validé par'}) }}
+        {{ form_row(form.valideLe, {'label': 'Validé le'}) }}
+    </div>
+
+    <!-- Colonne droite -->
+    <div class="form-section right">
+        <h2>Signature</h2>
+        {{ form_row(form.signature.type, {'label': 'Type de signature'}) }}
+        {{ form_row(form.signature.scelle, {'label': 'Scellé'}) }}
+        {{ form_row(form.signature.certificat, {'label': 'Certificat'}) }}
+        {{ form_row(form.signature.horodatage, {'label': 'Horodatage'}) }}
+    </div>
+</div>
+
+<div class="submit-container">
+    <button type="submit" class="btn-submit">Enregistrer</button>
+</div>
+
+{{ form_end(form) }}
+{% endblock %}

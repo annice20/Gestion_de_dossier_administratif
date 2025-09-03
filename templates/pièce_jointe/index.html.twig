@@ -3,6 +3,125 @@
 {% block title %}Pièce jointe{% endblock %}
 
 {% block body %}
+<style>
+    /*Pièce joint*/
+.pj-container {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 1.5rem;
+    background-color: #3d3e3f3e;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgb(0 0 0 / 0.1);
+    font-family: Arial, sans-serif;
+}
+
+.pj-container h2 {
+    color: #2c3e50;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.pj-container p {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+    color: #34495e;
+    text-align: center;
+}
+
+.alert {
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    padding: 10px 15px;
+    border-radius: 5px;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+form > div {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+    color: #34495e;
+}
+
+input[type="text"],
+input[type="file"],
+input[type="number"],
+textarea {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="file"]:focus,
+input[type="number"]:focus,
+textarea:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 3px #007bff;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center; /* centre horizontalement */
+    align-items: center;     /* centre verticalement */
+}
+
+button[type="submit"] {
+    background-color: orange;
+    color: white;
+    font-weight: 600;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    width: 200px; /* largeur moyenne */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: darkorange;
+    transform: translateY(-2px);
+}
+
+button[type="submit"]:active {
+    background-color: #cc7000;
+    transform: translateY(0);
+}
+
+
+a {
+    display: block;
+    margin-top: 1.5rem;
+    text-align: center;
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+</style>
 <div class="pj-container">
     <h2>Pièce jointe</h2>
 
@@ -24,9 +143,15 @@
     {{ form_row(form.hash) }}
     {{ form_row(form.url) }}
     {{ form_row(form.taille) }}
-    {{ form_row(form.verif_statut) }}
+    <div class="form-check">
+    {{ form_widget(form.verif_statut, {'attr': {'class': 'form-check-input'}}) }}
+    {{ form_label(form.verif_statut, null, {'label_attr': {'class': 'form-check-label'}}) }}
+   </div>
 
-    <button type="submit">Enregistrer</button>
+    <div class="button-container">
+        <button type="submit">Enregistrer</button>
+    </div>
+
 
     {{ form_end(form) }}
 

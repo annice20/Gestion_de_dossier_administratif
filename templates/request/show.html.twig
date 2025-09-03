@@ -1,0 +1,178 @@
+{% extends 'navAdministration.html.twig' %}
+
+{% block title %}Détails demande {{ request.ref }}{% endblock %}
+
+{% block stylesheets %}
+<style>
+  table {
+    width: 80%;
+    margin: auto;
+    border-collapse: collapse;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 0 8px #999;
+  }
+  
+  th, td {
+    border: 1px solid #999;
+    padding: 12px 15px;
+  }
+  th {
+    background-color: #c9a465;
+    font-weight: bold;
+  }
+  .btn-voir {
+    background-color: #a56a00;
+    border: none;
+    color: white;
+    padding: 7px 15px;
+    cursor: pointer;
+    border-radius: 6px;
+    text-decoration: none;
+  }
+  .btn-voir:hover {
+    background-color: #7a4e00;
+  }
+  input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+  }
+  h1 {
+    text-align: center;
+    font-weight: 700;
+    font-size: 2.5em;
+    margin-bottom: 30px;
+    color: #34495e;
+  }
+  p {
+    font-size: 1.1em;
+    margin: 12px 0;
+    color: #555;
+  }
+  h2 {
+    margin-top: 40px;
+    font-size: 1.8em;
+    color: #2c3e50;
+    border-bottom: 2px solid #9c661f;
+    padding-bottom: 5px;
+    text-align: center;
+  }
+  ul {
+    list-style-type: none;
+    padding-left: 0;
+  }
+  ul li {
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 15px;
+  }
+  ul li strong {
+    font-size: 1.1em;
+    color: #7a4a00;
+  }
+  ul li img {
+    display: block;
+    max-width: 300px;
+    max-height: 200px;
+    border: 1px solid #ccc;
+    margin-top: 8px;
+    border-radius: 5px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  a {
+    color: #9c661f;
+    font-weight: bold;
+    text-decoration: none;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+  form {
+    margin: 30px auto;
+    padding: 25px 35px;
+    max-width: 450px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 10px 35px rgba(0,0,0,0.1);
+    text-align: center;
+  }
+  label {
+    display: block;
+    margin-bottom: 18px;
+    font-size: 1.2em;
+    cursor: pointer;
+    color: #34495e;
+  }
+  input[type="radio"] {
+    margin-right: 12px;
+    cursor: pointer;
+    transform: scale(1.4);
+    vertical-align: middle;
+  }
+  button.btn-primary {
+    background-color: #9c661f;
+    color: #fff;
+    border: none;
+    padding: 12px 28px;
+    font-size: 1.1em;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  button.btn-primary:hover {
+    background-color: #704a10;
+  }
+
+  /* Centrer le lien retour */
+  .centered-link {
+    display: block;
+    text-align: center;
+    margin-top: 30px;
+  }
+</style>
+{% endblock %}
+
+{% block body %}
+<h1>Détails de la demande {{ request.ref }}</h1>
+
+<p><strong>Demandeur :</strong> {{ request.demandeur.nom ?? 'N/A' }} {{ request.demandeur.prenom ?? '' }}</p>
+<p><strong>Type :</strong> {{ request.type.libelle ?? 'N/A' }}</p>
+<p><strong>Statut :</strong> {{ request.statut }}</p>
+<p><strong>Date de création :</strong> {{ request.createdAt ? request.createdAt|date('d/m/Y H:i') : 'N/A' }}</p>
+
+<h2>Pièces jointes</h2>
+{% if attachments is not empty %}
+    <ul>
+        {% for attachment in attachments %}
+            <li>
+                <strong>{{ attachment.typePiece }}</strong><br/>
+                {% set ext = attachment.nomFichier|split('.')|last|lower %}
+                {% if ext in ['jpg', 'jpeg', 'png', 'gif', 'bmp'] %}
+                    <img src="{{ asset(attachment.url) }}" alt="{{ attachment.nomFichier }}">
+                {% else %}
+                    <a href="{{ asset(attachment.url) }}" target="_blank">{{ attachment.nomFichier }}</a>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>Aucune pièce jointe associée.</p>
+{% endif %}
+
+<form method="post" action="{{ path('request_update_statut', {'id': request.id}) }}">
+    <label>
+        <input type="radio" name="statut" value="Validé" {{ request.statut == 'Validé' ? 'checked' : '' }}> Valider
+    </label>
+    <label>
+        <input type="radio" name="statut" value="Refusé" {{ request.statut == 'Refusé' ? 'checked' : '' }}> Refuser
+    </label>
+    <label>
+        <input type="radio" name="statut" value="" {{ request.statut is empty ? 'checked' : '' }}> Aucun
+    </label>
+
+    <button type="submit" class="btn btn-primary">Enregistrer</button>
+</form>
+
+<a href="{{ path('fil_attente_index') }}" class="centered-link">Retour à la file d'attente</a>
+{% endblock %}
