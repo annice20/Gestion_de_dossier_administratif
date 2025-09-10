@@ -1,5 +1,7 @@
 <?php
 
+
+
 namespace App\Controller\Api;
 
 use App\Entity\Attachment;
@@ -26,33 +28,47 @@ final class PieceJointeApiController extends AbstractController
             return $this->json(['error' => 'Demande non trouvée.'], 404);
         }
 
-        $file = $request->files->get('file'); // nom du champ "file" dans React Native
-
+        $file = $request->files->get('file');
         if (!$file) {
             return $this->json(['error' => 'Aucun fichier envoyé.'], 400);
         }
 
+        $typePiece = $request->request->get('typePiece');
+        $hash = $request->request->get('hash');
+        $url = $request->request->get('url');
+        $taille = (int) $request->request->get('taille');
+        $verifStatut = $request->request->get('verifStatut') === 'true';
+
+        if (!$typePiece) {
+            return $this->json(['error' => 'Le champ typePiece est requis.'], 400);
+        }
+
         $attachment = new Attachment();
         $attachment->setRequest($requestEntity);
+        $attachment->setTypePiece($typePiece);
+        $attachment->setHash($hash);
+        $attachment->setTaille($taille);
+        $attachment->setVerifStatut($verifStatut ? 'true' : 'false');
 
-        $size = $file->getSize();
+        // ✅ Générer nom fichier sécurisé
         $userFileName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
         $safeFileName = preg_replace('/[^a-zA-Z0-9_-]/', '_', $userFileName);
         $extension = $file->guessExtension() ?: $file->getClientOriginalExtension() ?: 'bin';
         $newFilename = sprintf('%s_%s.%s', $safeFileName, uniqid(), $extension);
 
         try {
-            $file->move(
-                $this->getParameter('upload_directory'),
-                $newFilename
-            );
+            $file->move($this->getParameter('upload_directory'), $newFilename);
         } catch (\Exception $e) {
             return $this->json(['error' => 'Impossible de sauvegarder le fichier.'], 500);
         }
 
-        $attachment->setUrl('/fichier_de_demandeur/' . $newFilename);
-        $attachment->setNomFichier($userFileName);
-        $attachment->setTaille($size);
+        // ✅ URL complète
+        $baseUrl = $request->getSchemeAndHttpHost(); // http://192.168.88.65:8000
+        $fullUrl = $baseUrl . '/fichier_de_demandeur/' . $newFilename;
+
+        $attachment->setNomFichier($file->getClientOriginalName());
+        $attachment->setUrl($fullUrl);
+        $attachment->setTaille($file->getSize());
 
         $em->persist($attachment);
         $em->flush();
@@ -62,8 +78,11 @@ final class PieceJointeApiController extends AbstractController
             'attachment' => [
                 'id' => $attachment->getId(),
                 'nomFichier' => $attachment->getNomFichier(),
+                'typePiece' => $attachment->getTypePiece(),
                 'url' => $attachment->getUrl(),
-                'taille' => $attachment->getTaille()
+                'taille' => $attachment->getTaille(),
+                'hash' => $attachment->getHash(),
+                'verifStatut' => $attachment->getVerifStatut(),
             ]
         ]);
     }
