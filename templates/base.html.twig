@@ -13,28 +13,28 @@
         {{ encore_entry_link_tags('app') }}
     {% endblock %}
     <style>
-    /* CSS to reposition the notification badge */
-    .nav-item .nav-link {
-        position: relative;
-    }
+        .nav-item .nav-link {
+            position: relative;
+            margin-left: 50px;
+        }
 
-    #notificationsDropdown {
-        position: relative;
-        display: inline-block;
-    }
+        #notificationsDropdown {
+            position: relative;
+            display: inline-block;
+        }
 
-    #notification-count {
-        position: absolute;
-        top: 0;
-        right: 0;
-        transform: translate(50%, -50%);
-        font-size: 0.75em;
-        border-radius: 50%;
-    }
+        #notification-count {
+            position: absolute;
+            top: 0;
+            right: 0;
+            transform: translate(50%, -50%);
+            font-size: 0.75em;
+            border-radius: 50%;
+        }
 
-    .fa-bell {
-        font-size: 24px;
-    }
+        .fa-bell {
+            font-size: 24px;
+        }
     </style>
 </head>
 <body>
