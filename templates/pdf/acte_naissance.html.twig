@@ -1,0 +1,45 @@
+{# templates/pdf/acte_naissance.html.twig #}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Acte de Naissance - {{ acte.nom }} {{ acte.prenom }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .content { margin: 20px 0; }
+        .signature { margin-top: 50px; text-align: right; }
+        .border { border: 2px solid #000; padding: 20px; }
+    </style>
+</head>
+<body>
+    <div class="border">
+        <div class="header">
+            <h1>RÉPUBLIQUE FRANÇAISE</h1>
+            <h2>ACTE DE NAISSANCE</h2>
+        </div>
+        
+        <div class="content">
+            <p>Je soussigné(e), Officier de l'état civil de la commune de {{ acte.commune }},</p>
+            <p>certifie que :</p>
+            
+            <p><strong>Nom :</strong> {{ acte.nom }}</p>
+            <p><strong>Prénom :</strong> {{ acte.prenom }}</p>
+            <p><strong>Date de naissance :</strong> {{ acte.dateNaissance|date('d/m/Y') }}</p>
+            <p><strong>Lieu de naissance :</strong> {{ acte.lieuNaissance }}</p>
+            <p><strong>Sexe :</strong> {{ acte.sexe }}</p>
+            
+            <p><strong>Père :</strong> {{ acte.nomPere }} {{ acte.prenomPere }}</p>
+            <p><strong>Mère :</strong> {{ acte.nomMere }} {{ acte.prenomMere }}</p>
+            
+            <p>Délivré le {{ "now"|date('d/m/Y') }} pour servir et valoir ce que de droit.</p>
+        </div>
+        
+        <div class="signature">
+            <p>Le Maire/Officier d'état civil</p>
+            <p>_________________________</p>
+            <p>Cachet de la mairie</p>
+        </div>
+    </div>
+</body>
+</html>
