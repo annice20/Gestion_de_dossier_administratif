@@ -142,13 +142,13 @@
 <p><strong>Date de création :</strong> {{ request.createdAt ? request.createdAt|date('d/m/Y H:i') : 'N/A' }}</p>
 
 <h2>Pièces jointes</h2>
-{% if attachments is not empty %}
+{% if attachments|default([]) is not empty %}   {# test sur la collection #}
     <ul>
-        {% for attachment in attachments %}
+        {% for attachment in attachments %}       {# boucle sur la collection #}
             <li>
                 <strong>{{ attachment.typePiece }}</strong><br/>
                 {% set ext = attachment.nomFichier|split('.')|last|lower %}
-                {% if ext in ['jpg', 'jpeg', 'png', 'gif', 'bmp'] %}
+                {% if ext in ['jpg','jpeg','png','gif','bmp'] %}
                     <img src="{{ asset(attachment.url) }}" alt="{{ attachment.nomFichier }}">
                 {% else %}
                     <a href="{{ asset(attachment.url) }}" target="_blank">{{ attachment.nomFichier }}</a>
@@ -159,8 +159,8 @@
 {% else %}
     <p>Aucune pièce jointe associée.</p>
 {% endif %}
-
-<form method="post" action="{{ path('request_update_statut', {'id': request.id}) }}">
+<form method="post"
+      action="{{ path('fil_attente_update_statut', {'id': request.id}) }}">
     <label>
         <input type="radio" name="statut" value="Validé" {{ request.statut == 'Validé' ? 'checked' : '' }}> Valider
     </label>
