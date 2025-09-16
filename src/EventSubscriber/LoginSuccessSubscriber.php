@@ -33,7 +33,7 @@ class LoginSuccessSubscriber implements EventSubscriberInterface
         // Si l'utilisateur a le rôle d'administrateur
         if (in_array('ROLE_ADMIN', $roles)) {
             // Redirige vers la page de décision de l'administration
-            $targetUrl = $this->urlGenerator->generate('app_decision');
+            $targetUrl = $this->urlGenerator->generate('fil_attente_index');
         } elseif (in_array('ROLE_USER', $roles)) {
             // Redirige vers la page d'accueil du citoyen
             $targetUrl = $this->urlGenerator->generate('app_accueil');

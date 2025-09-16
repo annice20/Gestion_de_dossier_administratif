@@ -14,82 +14,84 @@ class Notification
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 100)]
-    private ?string $canal_to = null;
-
-    #[ORM\Column(length: 50)]
-    private ?string $template = null;
+    #[ORM\Column(length: 255)]
+    private ?string $titre = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    private ?string $payload = null;
-
-    #[ORM\Column(length: 20)]
-    private ?string $statut = null;
+    private ?string $message = null;
 
     #[ORM\Column]
-    private ?\DateTime $horodatage = null;
+    private ?bool $isRead = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $horodatage = null;
+
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'notifications')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getCanalTo(): ?string
+    public function getTitre(): ?string
     {
-        return $this->canal_to;
+        return $this->titre;
     }
 
-    public function setCanalTo(string $canal_to): static
+    public function setTitre(string $titre): static
     {
-        $this->canal_to = $canal_to;
+        $this->titre = $titre;
 
         return $this;
     }
 
-    public function getTemplate(): ?string
+    public function getMessage(): ?string
     {
-        return $this->template;
+        return $this->message;
     }
 
-    public function setTemplate(string $template): static
+    public function setMessage(string $message): static
     {
-        $this->template = $template;
+        $this->message = $message;
 
         return $this;
     }
 
-    public function getPayload(): ?string
+    public function isIsRead(): ?bool
     {
-        return $this->payload;
+        return $this->isRead;
     }
 
-    public function setPayload(string $payload): static
+    public function setIsRead(bool $isRead): static
     {
-        $this->payload = $payload;
+        $this->isRead = $isRead;
 
         return $this;
     }
 
-    public function getStatut(): ?string
-    {
-        return $this->statut;
-    }
-
-    public function setStatut(string $statut): static
-    {
-        $this->statut = $statut;
-
-        return $this;
-    }
-
-    public function getHorodatage(): ?\DateTime
+    public function getHorodatage(): ?\DateTimeImmutable
     {
         return $this->horodatage;
     }
 
-    public function setHorodatage(\DateTime $horodatage): static
+    public function setHorodatage(\DateTimeImmutable $horodatage): static
     {
         $this->horodatage = $horodatage;
+
+        return $this;
+    }
+
+    // Méthodes pour gérer la relation avec l'entité User
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }

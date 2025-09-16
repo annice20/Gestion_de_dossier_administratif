@@ -1,7 +1,5 @@
 {% extends 'navAdministration.html.twig' %}
 
-
-
 {% block title %}File de réception{% endblock %}
 
 {% block stylesheets %}
@@ -57,21 +55,48 @@
   </thead>
   <tbody>
     {% for request in requests %}
-      <tr>
+      <tr data-request-id="{{ request.id }}">
         <td>{{ request.ref }}</td>
-        <td>{{ request.demandeur.nom ?? 'N/A' }} {{ request.demandeur.prenom ?? '' }}</td>
-        <td>{{ request.type.libelle ?? 'N/A' }}</td>
+        <td>{{ request.demandeur.nom }} {{ request.demandeur.prenoms }}</td>
+        <td>{{ request.type.libelle }}</td>
         <td>
           <a href="{{ path('request_show', {'id': request.id}) }}" class="btn-voir">Voir</a>
         </td>
-        <td><input type="checkbox" disabled {{ request.statut == 'Validé' ? 'checked' : '' }} ></td>
-        <td><input type="checkbox" disabled {{ request.statut == 'Refusé' ? 'checked' : '' }} ></td>
+        <td><input type="checkbox" class="status-checkbox" data-status="accepte" {{ request.statut == 'Validé' ? 'checked' : '' }}></td>
+        <td><input type="checkbox" class="status-checkbox" data-status="refuse" {{ request.statut == 'Refusé' ? 'checked' : '' }}></td>
       </tr>
     {% else %}
       <tr>
-        <td colspan="6">Aucune demande dans la file d'attente.</td>
+        <td colspan="6">Aucune demande en attente.</td>
       </tr>
     {% endfor %}
   </tbody>
 </table>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.status-checkbox').forEach(checkbox => {
+      checkbox.addEventListener('change', (event) => {
+        const row = event.target.closest('tr');
+        const requestId = row.dataset.requestId;
+        const newStatus = event.target.dataset.status;
+
+        row.querySelectorAll('.status-checkbox').forEach(cb => {
+          if (cb !== event.target) {
+            cb.checked = false;
+          }
+        });
+
+        if (event.target.checked) {
+          fetch(`/demande/${requestId}/statut/${newStatus}`, { method: 'POST' })
+          .then(response => response.json())
+          .then(data => {
+            alert(data.message);
+          })
+          .catch(error => console.error('Erreur:', error));
+        }
+      });
+    });
+  });
+</script>
 {% endblock %}

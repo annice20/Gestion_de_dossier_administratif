@@ -1,39 +1,65 @@
 <?php
+
 namespace App\Controller;
 
 use App\Entity\Request;
+use App\Service\NotificationService;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request as HttpRequest;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Response;
 
 class RequestController extends AbstractController
 {
-    #[Route('/demande/{id}', name: 'request_show')]
-    public function show(Request $requestEntity): Response
-    {
-        $attachments = $requestEntity->getAttachments();
+    public function __construct(
+        private EntityManagerInterface $entityManager,
+        private NotificationService $notificationService,
+        private LoggerInterface $logger,
+    ) {}
 
-        return $this->render('request/show.html.twig', [
-            'request' => $requestEntity,
-            'attachments' => $attachments,
-        ]);
-    }
-
-    #[Route('/demande/{id}/update-statut', name: 'request_update_statut', methods: ['POST'])]
-    public function updateStatut(Request $requestEntity, HttpRequest $request, EntityManagerInterface $em): Response
+    #[Route('/demande/{id}/statut/{statut}', name: 'app_request_update_status', methods: ['POST'])]
+    public function updateStatus(Request $request, string $statut): JsonResponse
     {
-        $statut = $request->request->get('statut');
-        if (!in_array($statut, ['Validé', 'Refusé', ''])) {
-            $this->addFlash('error', 'Statut invalide.');
-            return $this->redirectToRoute('request_show', ['id' => $requestEntity->getId()]);
+        if (!in_array($statut, ['accepte', 'refuse'])) {
+            return $this->json(['status' => 'error', 'message' => 'Statut non valide.'], 400);
         }
 
-        $requestEntity->setStatut($statut ?: null);
-        $em->flush();
+        $user = $request->getDemandeur()?->getUser();
+        if (!$user || !$user->getEmail()) {
+            return $this->json(['status' => 'error', 'message' => 'Email de l\'utilisateur introuvable.'], 404);
+        }
 
-        $this->addFlash('success', 'Statut mis à jour avec succès.');
-        return $this->redirectToRoute('request_show', ['id' => $requestEntity->getId()]);
+        try {
+            $message = $statut === 'accepte' ? 'Votre demande a été acceptée.' : 'Votre demande a été refusée.';
+
+            // Notification email
+            $this->notificationService->sendEmailNotification($user->getEmail(), $message, $request->getRef());
+
+            // Notification base
+            $this->notificationService->createAndSaveNotification($user, 'Mise à jour de votre demande', $message);
+
+            // Mise à jour du statut
+            $request->setStatut($statut === 'accepte' ? 'Validé' : 'Refusé');
+            $this->entityManager->flush();
+
+            return $this->json(['status' => 'success', 'message' => 'Statut mis à jour et notification envoyée.']);
+
+        } catch (\Exception $e) {
+            $this->logger->error('Erreur notification : ' . $e->getMessage());
+
+            return $this->json([
+                'status' => 'error',
+                'message' => 'Erreur lors de la mise à jour ou de l\'envoi de la notification.',
+                'details' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    #[Route('/request/{id}', name: 'request_show', methods: ['GET'])]
+    public function show(Request $request): Response
+    {
+        return $this->render('request/show.html.twig', ['request' => $request]);
     }
 }
