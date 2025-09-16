@@ -4,23 +4,16 @@
 
 {% block body %}
 <main class="dashboard">
-    
     <h1 class="dashboard-title">Tableau de pilotage</h1>
-    
+
     <section class="summary">
         <div class="summary-item">
-            <span>Document reçu ce mois :</span>
+            <span>Documents reçus :</span>
             <span class="summary-bar">{{ totalDocumentsRecus }}</span>
         </div>
-
         <div class="summary-item">
-            <span>Document en retard :</span>
+            <span>Documents en attente :</span>
             <span class="summary-bar">{{ documentsEnAttente }}</span>
-        </div>
-
-        <div class="summary-item">
-            <span>Temps moyen de traitement :</span>
-            <span class="summary-highlight">24 heures max</span>
         </div>
     </section>
 
@@ -29,17 +22,12 @@
             <h3>Documents reçus</h3>
             <p class="card-value">{{ totalDocumentsRecus }} dmds ⭐</p>
         </div>
-        <div class="custom-card card-traitement">
-            <h3>Temps de traitement</h3>
-            <p class="card-placeholder">--</p>
-        </div>
         <div class="custom-card card-attente">
-            <h3>Document en attente</h3>
+            <h3>Documents en attente</h3>
             <p class="card-value">{{ documentsEnAttente }}</p>
         </div>
     </section>
 
-    <a href="#" class="dashboard-link">Voir le pilotage</a>
-
+    <a href="{{ path('app_dashboard_pilotage') }}" class="dashboard-link">Voir le pilotage</a>
 </main>
 {% endblock %}
