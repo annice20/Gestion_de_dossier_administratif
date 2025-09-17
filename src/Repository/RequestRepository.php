@@ -13,17 +13,35 @@ class RequestRepository extends ServiceEntityRepository
         parent::__construct($registry, Request::class);
     }
 
+    /**
+     * Archive automatiquement les requêtes plus anciennes que $days jours
+     * Change le statut en 'archived' et retourne le nombre de lignes mises à jour
+     */
+    public function archiveOldRequests(int $days): int
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder()
+            ->update(Request::class, 'r')
+            ->set('r.statut', ':archived')
+            ->where('r.createdAt < :date')
+            ->setParameter('archived', 'archived')
+            ->setParameter('date', new \DateTime("-{$days} days"));
+
+        return $qb->getQuery()->execute();
+    }
+
+    // Compte toutes les requêtes
     public function countAll(): int
     {
-        return $this->createQueryBuilder('r')
+        return (int) $this->createQueryBuilder('r')
             ->select('COUNT(r.id)')
             ->getQuery()
             ->getSingleScalarResult();
     }
 
+    // Compte les requêtes selon leur statut
     public function countByStatus(string $status): int
     {
-        return $this->createQueryBuilder('r')
+        return (int) $this->createQueryBuilder('r')
             ->select('COUNT(r.id)')
             ->andWhere('r.statut = :status')
             ->setParameter('status', $status)
@@ -31,6 +49,7 @@ class RequestRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
+    // Compte les requêtes d'une date précise
     public function countByDate(\DateTimeInterface $date): int
     {
         $start = (clone $date)->setTime(0,0,0);

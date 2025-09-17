@@ -27,11 +27,12 @@ class ServicesListeController extends AbstractController
 
             $this->addFlash('success', 'La demande a été créée avec succès.');
 
-            // Rediriger vers la page pour ajouter les pièces jointes à cette demande
+            // Redirection vers l'ajout de pièces jointes
             return $this->redirectToRoute('app_piece_jointe', ['request_id' => $requestEntity->getId()]);
         }
 
-        $archivedCount = $requestRepository->archiveOldRequests(30); // Archive après 30 jours
+        // Archiver automatiquement les requêtes de plus de 30 jours
+        $archivedCount = $requestRepository->archiveOldRequests(30);
         if ($archivedCount > 0) {
             $this->addFlash('info', $archivedCount . ' anciennes demandes ont été archivées automatiquement.');
         }
