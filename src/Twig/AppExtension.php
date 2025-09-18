@@ -24,11 +24,11 @@ class AppExtension extends AbstractExtension
         $length = strlen($digits);
 
         if ($length === 10 && substr($digits, 0, 1) === '0') {
-            // Format Malgache local (0344887315) -> (+261 34 48 873 15)
-            return '+261 ' . substr($digits, 1, 2) . ' ' . substr($digits, 3, 2) . ' ' . substr($digits, 5, 3) . ' ' . substr($digits, 8, 2);
+            // Format Malgache local (0344887315) -> 34 48 873 15
+            return substr($digits, 1, 2) . ' ' . substr($digits, 3, 2) . ' ' . substr($digits, 5, 3) . ' ' . substr($digits, 8, 2);
         } elseif ($length === 11 && substr($digits, 0, 3) === '261') {
-            // Format Malgache international (261344887315) -> (+261 34 48 873 15)
-            return '+' . substr($digits, 0, 3) . ' ' . substr($digits, 3, 2) . ' ' . substr($digits, 5, 2) . ' ' . substr($digits, 7, 3) . ' ' . substr($digits, 10, 2);
+            // Format Malgache international sans +261 (261344887315) -> 34 48 873 15
+            return substr($digits, 3, 2) . ' ' . substr($digits, 5, 2) . ' ' . substr($digits, 7, 3) . ' ' . substr($digits, 10, 2);
         }
 
         // 3. Si le format n'est pas reconnu, retourne le numéro tel quel
