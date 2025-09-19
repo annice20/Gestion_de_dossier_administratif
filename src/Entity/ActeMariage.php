@@ -100,6 +100,14 @@ class ActeMariage
     #[ORM\Column(type: 'json', nullable: true)]
     private array $temoins = [];
 
+    public function __construct()
+    {
+        $this->dateMariage = new \DateTime();
+        $this->epouxDateNaissance = new \DateTime();
+        $this->epouseDateNaissance = new \DateTime();
+        $this->temoins = [];
+    }
+
     // --- Getters et setters ---
     public function getId(): ?int { return $this->id; }
     public function getCommune(): string { return $this->commune; }
@@ -159,4 +167,19 @@ class ActeMariage
 
     public function getTemoins(): array { return $this->temoins; }
     public function setTemoins(array $temoins): self { $this->temoins = $temoins; return $this; }
+    
+    public function addTemoin(array $temoin): self
+    {
+        $this->temoins[] = $temoin;
+        return $this;
+    }
+    
+    public function removeTemoin(int $index): self
+    {
+        if (isset($this->temoins[$index])) {
+            unset($this->temoins[$index]);
+            $this->temoins = array_values($this->temoins);
+        }
+        return $this;
+    }
 }

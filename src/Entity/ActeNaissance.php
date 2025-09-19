@@ -43,6 +43,11 @@ class ActeNaissance
     #[ORM\Column(type: 'string', length: 255)]
     private string $commune;
 
+    public function __construct()
+    {
+        $this->dateNaissance = new \DateTime();
+    }
+
     // --- Getters et Setters ---
     public function getId(): ?int { return $this->id; }
 
