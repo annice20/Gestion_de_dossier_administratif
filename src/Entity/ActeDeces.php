@@ -37,6 +37,12 @@ class ActeDeces
     #[ORM\Column(type: 'string', length: 255)]
     private string $commune;
 
+    public function __construct()
+    {
+        $this->dateNaissance = new \DateTime();
+        $this->dateDeces = new \DateTime();
+    }
+
     // --- Getters et Setters ---
 
     public function getId(): ?int
