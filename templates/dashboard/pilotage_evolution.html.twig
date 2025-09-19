@@ -1,0 +1,84 @@
+{% extends 'navAdministration.html.twig' %}
+
+{% block title %}Pilotage Évolution{% endblock %}
+
+{% block body %}
+<main style="display: flex;justify-content:center; align-items:center; height:300px;gap:20px;">
+    <h1 class="dashboard-title" style="position:absolute; top:20px; font-size:2rem; color:#34495e;;margin-top: 4rem;">Pilotage - Évolution</h1>
+    <!-- Graphique semaine -->
+    <div style="width:800px; height:500px; background:white; padding:15px; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1);margin-top: 400px;">
+        <canvas id="evolutionChartWeek" width="800" height="500"></canvas>
+    </div>
+
+    <!-- Graphique mois -->
+    <div style="width:800px; height:500px; background:white; padding:15px; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1);margin-top: 400px;">
+        <canvas id="evolutionChartMonth" width="800" height="500"></canvas>
+    </div>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// --- Semaine ---
+const ctxWeek = document.getElementById('evolutionChartWeek').getContext('2d');
+const evolutionChartWeek = new Chart(ctxWeek, {
+    type: 'line',
+    data: {
+        labels: [],
+        datasets: [
+            { label: 'Documents', data: [], borderColor: '#36A2EB', backgroundColor: 'rgba(54,162,235,0.2)', fill:true, tension:0.3 },
+            { label: 'Demandes', data: [], borderColor: '#FF6384', backgroundColor: 'rgba(255,99,132,0.2)', fill:true, tension:0.3 }
+        ]
+    },
+    options: {
+        responsive:true,
+        plugins: { legend:{position:'top'}, title:{display:true,text:'Évolution documents & demandes - 7 jours'} },
+        scales:{ x:{title:{display:true,text:'Date'}}, y:{title:{display:true,text:'Nombre'}, beginAtZero:true} }
+    }
+});
+
+function updateChartWeek() {
+    fetch('{{ path("api_dashboard_data_week") }}')
+        .then(resp => resp.json())
+        .then(data => {
+            evolutionChartWeek.data.labels = data.dates;
+            evolutionChartWeek.data.datasets[0].data = data.dataDocuments;
+            evolutionChartWeek.data.datasets[1].data = data.dataDemandes;
+            evolutionChartWeek.update();
+        });
+}
+updateChartWeek();
+setInterval(updateChartWeek, 10000); // toutes les 10 sec
+
+// --- Mois ---
+const ctxMonth = document.getElementById('evolutionChartMonth').getContext('2d');
+const evolutionChartMonth = new Chart(ctxMonth, {
+    type: 'line',
+    data: {
+        labels: [],
+        datasets: [
+            { label: 'Documents', data: [], borderColor: '#36A2EB', backgroundColor: 'rgba(54,162,235,0.2)', fill:true, tension:0.3 },
+            { label: 'Demandes', data: [], borderColor: '#FF6384', backgroundColor: 'rgba(255,99,132,0.2)', fill:true, tension:0.3 }
+        ]
+    },
+    options: {
+        responsive:true,
+        plugins: { legend:{position:'top'}, title:{display:true,text:'Évolution documents & demandes - 6 mois'} },
+        scales:{ x:{title:{display:true,text:'Mois'}}, y:{title:{display:true,text:'Nombre'}, beginAtZero:true} }
+    }
+});
+
+function updateChartMonth() {
+    fetch('{{ path("api_dashboard_data_month") }}')
+        .then(resp => resp.json())
+        .then(data => {
+            evolutionChartMonth.data.labels = data.dates;
+            evolutionChartMonth.data.datasets[0].data = data.dataDocuments;
+            evolutionChartMonth.data.datasets[1].data = data.dataDemandes;
+            evolutionChartMonth.update();
+        });
+}
+updateChartMonth();
+setInterval(updateChartMonth, 60000); // toutes les 60 sec
+</script>
+{% endblock %}

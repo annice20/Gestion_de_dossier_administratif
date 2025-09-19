@@ -6,9 +6,6 @@ use App\Entity\Document;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-/**
- * @extends ServiceEntityRepository<Document>
- */
 class DocumentRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
@@ -16,58 +13,34 @@ class DocumentRepository extends ServiceEntityRepository
         parent::__construct($registry, Document::class);
     }
 
-    /**
-     * Compte le nombre total de documents dans la base de données.
-     */
     public function countAll(): int
     {
         return $this->createQueryBuilder('d')
-            ->select('count(d.id)')
+            ->select('COUNT(d.id)')
             ->getQuery()
             ->getSingleScalarResult();
     }
 
-    /**
-     * Compte les documents selon un statut donné.
-     */
     public function countByStatus(string $status): int
     {
         return $this->createQueryBuilder('d')
-            ->select('count(d.id)')
-            ->where('d.status = :status')
+            ->select('COUNT(d.id)')
+            ->andWhere('d.status = :status')
             ->setParameter('status', $status)
             ->getQuery()
             ->getSingleScalarResult();
     }
-    
-    /**
-     * Compte les documents reçus durant le mois en cours.
-     */
-    public function countReceivedThisMonth(): int
-    {
-        $startOfMonth = new \DateTime('first day of this month');
-        $endOfMonth = new \DateTime('last day of this month');
-        
-        return $this->createQueryBuilder('d')
-            ->select('count(d.id)')
-            ->where('d.dateReception BETWEEN :start AND :end')
-            ->setParameter('start', $startOfMonth)
-            ->setParameter('end', $endOfMonth)
-            ->getQuery()
-            ->getSingleScalarResult();
-    }
 
-    /**
-     * Compte les documents en retard.
-     */
-    public function countOverdue(): int
+    public function countByDate(\DateTimeInterface $date): int
     {
-        return $this->createQueryBuilder('d')
-            ->select('count(d.id)')
-            ->where('d.status = :status')
-            ->andWhere('d.dueDate < :now') 
-            ->setParameter('status', 'en_attente')
-            ->setParameter('now', new \DateTime())
+        $start = (clone $date)->setTime(0,0,0);
+        $end = (clone $date)->setTime(23,59,59);
+
+        return (int) $this->createQueryBuilder('d')
+            ->select('COUNT(d.id)')
+            ->andWhere('d.dateReception BETWEEN :start AND :end')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
             ->getQuery()
             ->getSingleScalarResult();
     }
