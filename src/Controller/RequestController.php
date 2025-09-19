@@ -2,7 +2,8 @@
 
 namespace App\Controller;
 
-use App\Entity\Request;
+use App\Entity\Request as UserRequest;
+use App\Entity\User;
 use App\Service\NotificationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -20,13 +21,20 @@ class RequestController extends AbstractController
     ) {}
 
     #[Route('/demande/{id}/statut/{statut}', name: 'app_request_update_status', methods: ['POST'])]
-    public function updateStatus(Request $request, string $statut): JsonResponse
+    public function updateStatus(int $id, string $statut): JsonResponse
     {
         if (!in_array($statut, ['accepte', 'refuse'])) {
             return $this->json(['status' => 'error', 'message' => 'Statut non valide.'], 400);
         }
 
-        $user = $request->getDemandeur()?->getUser();
+        // Récupérer la requête depuis la base
+        $userRequest = $this->entityManager->getRepository(UserRequest::class)->find($id);
+        if (!$userRequest) {
+            return $this->json(['status' => 'error', 'message' => 'Requête introuvable.'], 404);
+        }
+
+        // Récupérer l'utilisateur associé à la demande
+        $user = $userRequest->getDemandeur()?->getUser();
         if (!$user || !$user->getEmail()) {
             return $this->json(['status' => 'error', 'message' => 'Email de l\'utilisateur introuvable.'], 404);
         }
@@ -35,16 +43,25 @@ class RequestController extends AbstractController
             $message = $statut === 'accepte' ? 'Votre demande a été acceptée.' : 'Votre demande a été refusée.';
 
             // Notification email
-            $this->notificationService->sendEmailNotification($user->getEmail(), $message, $request->getRef());
+            $this->notificationService->sendEmailNotification($user->getEmail(), $message, $userRequest->getRef());
 
-            // Notification base
-            $this->notificationService->createAndSaveNotification($user, 'Mise à jour de votre demande', $message);
+            // Notification + décision avec le statut
+            $this->notificationService->createNotificationAndDecision(
+                $user,
+                $userRequest,
+                'Mise à jour de votre demande',
+                $message,
+                $statut // <-- important pour que "resultat" soit correct
+            );
 
             // Mise à jour du statut
-            $request->setStatut($statut === 'accepte' ? 'Validé' : 'Refusé');
+            $userRequest->setStatut($statut === 'accepte' ? 'Validé' : 'Refusé');
             $this->entityManager->flush();
 
-            return $this->json(['status' => 'success', 'message' => 'Statut mis à jour et notification envoyée.']);
+            return $this->json([
+                'status' => 'success',
+                'message' => 'Statut mis à jour, notification et décision créées.'
+            ]);
 
         } catch (\Exception $e) {
             $this->logger->error('Erreur notification : ' . $e->getMessage());
@@ -58,7 +75,7 @@ class RequestController extends AbstractController
     }
 
     #[Route('/request/{id}', name: 'request_show', methods: ['GET'])]
-    public function show(Request $request): Response
+    public function show(UserRequest $request): Response
     {
         return $this->render('request/show.html.twig', ['request' => $request]);
     }

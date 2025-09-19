@@ -21,7 +21,7 @@ class Decision
     #[ORM\Column(length: 20)]
     private ?string $resultat = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $motif = null;
 
     #[ORM\Column(length: 100)]
