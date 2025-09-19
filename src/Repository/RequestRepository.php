@@ -63,4 +63,19 @@ class RequestRepository extends ServiceEntityRepository
             ->getQuery()
             ->getSingleScalarResult();
     }
+
+    /**
+     * Retourne toutes les requêtes avec le statut "archivé".
+     *
+     * @return Request[]
+     */
+    public function findArchives(): array
+    {
+        return $this->createQueryBuilder('r')
+            ->andWhere('r.statut = :statut')
+            ->setParameter('statut', 'archivé') // ⚠️ attention : "archivé" et non "archived" selon ton choix
+            ->orderBy('r.updatedAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
 }
