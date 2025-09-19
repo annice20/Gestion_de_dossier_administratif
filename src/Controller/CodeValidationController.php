@@ -10,6 +10,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Attribute\Route;
 
 final class CodeValidationController extends AbstractController
@@ -64,6 +66,48 @@ final class CodeValidationController extends AbstractController
         return $this->render('code_validation/index.html.twig', [
             'formcodevalidation' => $form->createView(),
             'user' => $user,
+        ]);
+    }
+
+    #[Route('/renvoyer-code', name: 'renvoyer_code_validation', methods: ['POST'])]
+    public function renvoyerCode(Request $request, EntityManagerInterface $em, MailerInterface $mailer, UserRepository $repositoryuser)
+    {
+        // Récupérer l'ID utilisateur envoyé depuis le formulaire
+        $userId = $request->request->get('user_id'); 
+        $user = $repositoryuser->find($userId);
+
+        if (!$user) {
+            return $this->json([
+                'status' => 'error',
+                'message' => 'Utilisateur introuvable !'
+            ], 404);
+        }
+
+        // Générer un nouveau code
+        $code = random_int(100000, 999999);
+
+        $validation = new CodeValidation();
+        $validation->setUser($user);
+        $validation->setCode($code);
+        $validation->setCreatedAt(new \DateTime());
+        $validation->setExpiresAt((new \DateTime())->modify('+15 minutes'));
+        $validation->setIsUsed(false);
+
+        $em->persist($validation);
+        $em->flush();
+
+        // Envoyer l'email
+        $emailMessage = (new Email())
+            ->from('notahiana.princy@gmail.com')
+            ->to($user->getEmail())
+            ->subject('Code de validation')
+            ->text("Votre code de validation est : $code");
+
+        $mailer->send($emailMessage);
+
+        return $this->json([
+            'status' => 'success',
+            'message' => 'Un nouveau code de validation a été envoyé à votre email.'
         ]);
     }
 }

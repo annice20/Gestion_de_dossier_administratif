@@ -1,0 +1,138 @@
+{# templates/pdf/acte_mariage.html.twig #}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Acte de Mariage - {{ acte.epoux_nom }} & {{ acte.epouse_nom }}</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 40px; 
+            line-height: 1.6;
+        }
+        .header { 
+            text-align: center; 
+            margin-bottom: 30px; 
+            border-bottom: 2px solid #000;
+            padding-bottom: 20px;
+        }
+        .content { 
+            margin: 20px 0; 
+        }
+        .signature { 
+            margin-top: 50px; 
+            text-align: right; 
+        }
+        .border { 
+            border: 2px solid #000; 
+            padding: 30px; 
+        }
+        .couple-info {
+            margin: 25px 0;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-left: 4px solid #333;
+        }
+        .witnesses {
+            margin: 20px 0;
+        }
+        .official-stamp {
+            text-align: center;
+            margin: 30px 0;
+            color: #666;
+            font-style: italic;
+        }
+        .important {
+            font-weight: bold;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="border">
+        <div class="header">
+            <h1>RÉPUBLIQUE FRANÇAISE</h1>
+            <h2>ACTE DE MARIAGE</h2>
+            <h3>Commune de {{ acte.commune }}</h3>
+        </div>
+        
+        <div class="content">
+            <p>L'an deux mille {{ "now"|date('Y')|slice(2,2) }}, le {{ "now"|date('d') }} du mois de {{ "now"|date('F')|trans }} à {{ acte.heure_mariage|default('10h00') }},</p>
+            
+            <p>Devant nous, {{ acte.officier_nom|default('Nom de l\'officier') }}, {{ acte.officier_titre|default('Maire/Officier d\'état civil') }} de la commune de {{ acte.commune }},</p>
+            
+            <p class="important">ONT COMPARU :</p>
+            
+            <div class="couple-info">
+                <p><strong>ÉPOUX :</strong></p>
+                <p>Monsieur {{ acte.epoux_nom }} {{ acte.epoux_prenom }}</p>
+                <p>Né(e) le : {{ acte.epoux_date_naissance|date('d/m/Y') }} à {{ acte.epoux_lieu_naissance }}</p>
+                <p>Fils de : {{ acte.epoux_pere_nom }} {{ acte.epoux_pere_prenom }} et de {{ acte.epoux_mere_nom }} {{ acte.epoux_mere_prenom }}</p>
+                <p>Profession : {{ acte.epoux_profession|default('Sans profession') }}</p>
+                <p>Domicile : {{ acte.epoux_domicile|default('Non renseigné') }}</p>
+            </div>
+            
+            <div class="couple-info">
+                <p><strong>ÉPOUSE :</strong></p>
+                <p>Madame {{ acte.epouse_nom }} {{ acte.epouse_prenom }}</p>
+                <p>Né(e) le : {{ acte.epouse_date_naissance|date('d/m/Y') }} à {{ acte.epouse_lieu_naissance }}</p>
+                <p>Fille de : {{ acte.epouse_pere_nom }} {{ acte.epouse_pere_prenom }} et de {{ acte.epouse_mere_nom }} {{ acte.epouse_mere_prenom }}</p>
+                <p>Profession : {{ acte.epouse_profession|default('Sans profession') }}</p>
+                <p>Domicile : {{ acte.epouse_domicile|default('Non renseigné') }}</p>
+            </div>
+            
+            <p>Lesquels nous ont requis de procéder à la célébration du mariage qu'ils ont contracté par-devant nous.</p>
+            
+            {% if acte.temoins is defined and acte.temoins|length > 0 %}
+            <div class="witnesses">
+                <p class="important">TÉMOINS :</p>
+                {% for temoin in acte.temoins %}
+                <p>- {{ temoin.nom }} {{ temoin.prenom }}, {{ temoin.age|default('Âge non renseigné') }} ans, {{ temoin.profession|default('Profession non renseignée') }}, demeurant à {{ temoin.domicile|default('Domicile non renseigné') }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            <p>Après avoir donné lecture des pièces du mariage et des articles 212, 213, 214, 215 et 371-1 du code civil relatifs aux droits et devoirs respectifs des époux,</p>
+            
+            <p>Nous avons demandé à chacun des époux s'ils veulent se prendre pour époux ;</p>
+            
+            <p>Chacun d'eux ayant répondu affirmativement,</p>
+            
+            <p class="important">DÉCLARONS AU NOM DE LA LOI QUE {{ acte.epoux_nom|upper }} {{ acte.epoux_prenom|upper }} ET {{ acte.epouse_nom|upper }} {{ acte.epouse_prenom|upper }} SONT UNIS PAR LE MARIAGE.</p>
+            
+            <p>Fait en mairie de {{ acte.commune }}, le {{ acte.date_mariage|date('d/m/Y') }} à {{ acte.heure_mariage|default('10h00') }},</p>
+            
+            <p>En présence des témoins et parties contractantes,</p>
+            
+            <p>Lecture faite,</p>
+        </div>
+        
+        <div class="signature">
+            <p>Signature des époux :</p>
+            <p>_________________________ & _________________________</p>
+            <p>{{ acte.epoux_nom }} {{ acte.epoux_prenom }} & {{ acte.epouse_nom }} {{ acte.epouse_prenom }}</p>
+            
+            <div style="margin-top: 30px;">
+                <p>Signature des témoins :</p>
+                {% if acte.temoins is defined %}
+                    {% for temoin in acte.temoins %}
+                    <p>_________________________</p>
+                    <p>{{ temoin.nom }} {{ temoin.prenom }}</p>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            
+            <div style="margin-top: 40px;">
+                <p>Le {{ acte.officier_titre|default('Maire') }},</p>
+                <p>_________________________</p>
+                <p>{{ acte.officier_nom|default('Nom de l\'officier') }}</p>
+            </div>
+        </div>
+        
+        <div class="official-stamp">
+            <p>Cachet officiel de la mairie de {{ acte.commune }}</p>
+            <p>Délivré le {{ "now"|date('d/m/Y') }} - Numéro d'acte: {{ acte.numero_acte|default('XXXXX') }}</p>
+        </div>
+    </div>
+</body>
+</html>

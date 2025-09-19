@@ -15,6 +15,11 @@ class NotificationController extends AbstractController
     public function getUnread(): JsonResponse
     {
         $user = $this->getUser();
+        if (!$user) {
+            // Pas d'utilisateur connecté => renvoyer tableau vide
+            return $this->json([]);
+        }
+
         return $this->json($this->notificationService->getUnreadNotifications($user));
     }
 
@@ -22,6 +27,10 @@ class NotificationController extends AbstractController
     public function markAsRead(): JsonResponse
     {
         $user = $this->getUser();
+        if (!$user) {
+            return $this->json(['status' => 'error', 'message' => 'Utilisateur non connecté.'], 403);
+        }
+
         $this->notificationService->markNotificationsAsRead($user);
         return $this->json(['status' => 'success']);
     }

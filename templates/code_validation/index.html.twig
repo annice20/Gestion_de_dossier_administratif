@@ -90,8 +90,28 @@
             {{ form_widget(formcodevalidation.digit6, {'attr': {'maxlength': 1, 'class': 'digit'}}) }}
         </div>
         <button type="submit" class="envoyer">Envoyer</button>
-        <p>Vous n'avez pas encore reçu le code ? <a href="#">Renvoyer</a></p>
+        <p>Vous n'avez pas encore reçu le code ? 
+            <a href="#" id="resend-code-link" data-user-id="{{ formcodevalidation.user_id.vars.value }}">Renvoyer</a>
+        </p>
     {{form_end(formcodevalidation) }}
   </div>
 </div>
+<script>
+    document.getElementById('resend-code-link').addEventListener('click', async (e) => {
+        e.preventDefault();
+        const userId = e.target.dataset.userId;
+        try {
+            const res = await fetch('{{ path('renvoyer_code_validation') }}', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: `user_id=${userId}`
+            });
+            const data = await res.json();
+            alert(data.message);
+        } catch (err) {
+            console.error(err);
+            alert('Erreur lors de l\'envoi du code.');
+        }
+    });
+</script>
 {% endblock %}
