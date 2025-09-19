@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello PageController!{% endblock %}
+{% block title %}Profile{% endblock %}
 
 {% block body %}
     <div class="d-flex custom-gap justify-content-center mt-5">
@@ -20,11 +20,15 @@
         <div class="card">
             <h1 class="card-title">COORDONNEES</h1>
             <div class="card-body">
-            <h3><strong>Nom:</strong> {{ profile.nom }}</h3>
-            <h3><strong>Adresse:</strong> {{ profile.adresse }}</h3>
-            <h3><strong>Numéro de téléphone:</strong> {{ user.telephone|format_phone_number }}</h3>
-            <h3><strong>Email:</strong> {{ user.email }}</h3>
-            <h3><strong>Langue:</strong> {{ user.langue }}</h3>
+                <h3><strong>Nom:</strong> {{ profile.nom }}</h3>
+                <h3><strong>Adresse:</strong> {{ profile.adresse }}</h3>
+                {% if user.langue == 'MLG' %}
+                    <h3><strong>Numéro de téléphone:</strong> +261 {{ user.telephone|format_phone_number }}</h3>
+                {% elseif user.langue == 'FR' %}
+                    <h3><strong>Numéro de téléphone:</strong> +33 {{ user.telephone|format_phone_number }}</h3>
+                {% endif %}
+                <h3><strong>Email:</strong> {{ user.email }}</h3>
+                <h3><strong>Langue:</strong> {{ user.langue }}</h3>
             </div>
         </div>
     </div>
