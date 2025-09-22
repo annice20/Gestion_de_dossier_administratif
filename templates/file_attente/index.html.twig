@@ -58,7 +58,8 @@
       <tr data-request-id="{{ request.id }}">
         <td>{{ request.ref }}</td>
         <td>{{ request.demandeur.nom }} {{ request.demandeur.prenoms }}</td>
-        <td>{{ request.type.libelle }}</td>
+        <td>{{ request.type ? request.type.libelle : 'Non défini' }}</td>
+        {# <td>{{ request.type.libelle }}</td> #}
         <td>
           <a href="{{ path('request_show', {'id': request.id}) }}" class="btn-voir">Voir</a>
         </td>
