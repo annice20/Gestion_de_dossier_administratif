@@ -8,6 +8,11 @@ use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<Archive>
+ *
+ * @method Archive|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Archive|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Archive[]    findAll()
+ * @method Archive[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class ArchiveRepository extends ServiceEntityRepository
 {
@@ -15,30 +20,19 @@ class ArchiveRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Archive::class);
     }
-    
 
-    //    /**
-    //     * @return Archive[] Returns an array of Archive objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('a')
-    //            ->andWhere('a.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('a.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
-
-    //    public function findOneBySomeField($value): ?Archive
-    //    {
-    //        return $this->createQueryBuilder('a')
-    //            ->andWhere('a.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    /**
+     * Retourne toutes les archives avec le statut 'archivé'.
+     *
+     * @return Archive[]
+     */
+    public function findArchives(): array
+    {
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.statut = :statut')
+            ->setParameter('statut', 'archivé')
+            ->orderBy('a.updatedAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
 }
