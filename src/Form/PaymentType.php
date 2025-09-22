@@ -9,6 +9,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\UrlType;
 
 class PaymentType extends AbstractType
 {
@@ -19,20 +22,38 @@ class PaymentType extends AbstractType
                 'class' => Request::class,
                 'choice_label' => 'ref',
                 'placeholder' => 'Choisir une demande',
+                'label' => 'Demande',
             ])
-            ->add('mode')
-            ->add('reference')
-            ->add('montant')
+            ->add('mode', ChoiceType::class, [
+                'choices' => [
+                    'Espèces' => 'Espèces',
+                    'Mobile Money' => 'Mobile Money',
+                    'Virement bancaire' => 'Virement bancaire',
+                    'Carte bancaire' => 'Carte bancaire',
+                ],
+                'placeholder' => 'Choisir un mode de paiement',
+                'label' => 'Mode de paiement',
+            ])
+            ->add('reference', TextType::class, [
+                'label' => 'Référence',
+            ])
+            ->add('montant', MoneyType::class, [
+                'currency' => 'MGA',
+                'label' => 'Montant',
+            ])
             ->add('statut', ChoiceType::class, [
                 'choices' => [
-                    'En attente' => 'pending',
-                    'Payé' => 'paid',
-                    'Annulé' => 'cancelled',
+                    'En attente' => 'En attente',
+                    'Payé' => 'Payé',
+                    'Annulé' => 'Annulé',
                 ],
                 'placeholder' => 'Choisir un statut',
+                'label' => 'Statut',
             ])
-            ->add('recu_url')
-        ;
+            ->add('recu_url', UrlType::class, [
+                'label' => 'URL du reçu',
+                'required' => false,
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

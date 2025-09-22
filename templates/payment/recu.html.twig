@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Reçu de paiement</title>
+    <style>
+        body { font-family: Arial, sans-serif; font-size: 14px; margin: 20px; }
+        h1 { text-align: center; color: #333; }
+        .section { margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        table th, table td { border: 1px solid #aaa; padding: 8px; text-align: left; }
+        table th { background-color: #f0f0f0; }
+        .footer { text-align: center; font-size: 12px; color: #666; margin-top: 30px; }
+    </style>
+</head>
+<body>
+
+<h1>Reçu de paiement</h1>
+
+<div class="section">
+    <h2>Détails du paiement</h2>
+    <table>
+        <tr><th>Référence</th><td>{{ payment.reference }}</td></tr>
+        <tr><th>Montant</th><td>{{ payment.montant }} MGA</td></tr>
+        <tr><th>Mode de paiement</th><td>{{ payment.mode }}</td></tr>
+        <tr><th>Statut</th><td>{{ payment.statut }}</td></tr>
+        <tr><th>Date</th><td>{{ "now"|date("d/m/Y H:i") }}</td></tr>
+    </table>
+</div>
+
+{% if demandeurProfile %}
+<div class="section">
+    <h2>Informations du demandeur</h2>
+    <table>
+        <tr><th>Nom</th><td>{{ demandeurProfile.nom }} {{ demandeurProfile.prenoms }}</td></tr>
+        <tr><th>Email</th><td>{{ demandeurProfile.user.email }}</td></tr>
+        <tr><th>Adresse</th><td>{{ demandeurProfile.adresse }}</td></tr>
+        <tr><th>Commune</th><td>{{ demandeurProfile.commune }}</td></tr>
+    </table>
+</div>
+{% endif %}
+
+<div class="footer">
+    Ce document est généré automatiquement par le système de gestion de dossiers administratifs.
+</div>
+
+</body>
+</html>

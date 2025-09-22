@@ -34,7 +34,7 @@ class RequestType
     #[ORM\Column(type: Types::TEXT)]
     private ?string $workflow = null;
 
-    #[ORM\OneToMany(mappedBy: 'requestType', targetEntity: Request::class)]
+    #[ORM\OneToMany(mappedBy: 'type', targetEntity: Request::class)]
     private Collection $requests;
 
     public function __construct()
@@ -70,21 +70,21 @@ class RequestType
     }
 
     // --------- JSON : Schema Formulaire ---------
-    public function getSchemaFormulaire(): ?array
+    public function getSchemaFormulaire(): array
     {
-        return $this->schema_formulaire ? json_decode($this->schema_formulaire, true) : null;
+        return $this->schema_formulaire ? json_decode($this->schema_formulaire, true) : [];
     }
 
-    public function setSchemaFormulaire(array $schema_formulaire): self
+    public function setSchemaFormulaire(array $schema_formulaire): static
     {
         $this->schema_formulaire = json_encode($schema_formulaire, JSON_UNESCAPED_UNICODE);
         return $this;
     }
 
     // --------- JSON : Pièce requise ---------
-    public function getPieceRequise(): ?array
+    public function getPieceRequise(): array
     {
-        return $this->piece_requise ? json_decode($this->piece_requise, true) : null;
+        return $this->piece_requise ? json_decode($this->piece_requise, true) : [];
     }
 
     public function setPieceRequise(array $piece_requise): static
@@ -105,9 +105,9 @@ class RequestType
     }
 
     // --------- JSON : Workflow ---------
-    public function getWorkflow(): ?array
+    public function getWorkflow(): array
     {
-        return $this->workflow ? json_decode($this->workflow, true) : null;
+        return $this->workflow ? json_decode($this->workflow, true) : [];
     }
 
     public function setWorkflow(array $workflow): static
@@ -129,7 +129,7 @@ class RequestType
     {
         if (!$this->requests->contains($request)) {
             $this->requests->add($request);
-            $request->setRequestType($this);
+            $request->setType($this); // correspond à 'type' dans Request
         }
         return $this;
     }
@@ -137,8 +137,8 @@ class RequestType
     public function removeRequest(Request $request): static
     {
         if ($this->requests->removeElement($request)) {
-            if ($request->getRequestType() === $this) {
-                $request->setRequestType(null);
+            if ($request->getType() === $this) {
+                $request->setType(null);
             }
         }
         return $this;
