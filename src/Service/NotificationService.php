@@ -9,12 +9,14 @@ use App\Entity\Request as UserRequest;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
+use Symfony\Bundle\SecurityBundle\Security;
 
 class NotificationService
 {
     public function __construct(
         private EntityManagerInterface $em,
         private MailerInterface $mailer,
+        private Security $security, // <-- injection du service Security
     ) {}
 
     /**
@@ -24,7 +26,7 @@ class NotificationService
     {
         $now = new \DateTimeImmutable();
 
-        // --- Notification ---
+        // --- Notification (toujours pour le demandeur) ---
         $notification = new Notification();
         $notification->setUser($user);
         $notification->setTitre($titre);
@@ -40,9 +42,15 @@ class NotificationService
         $decision->setResultat($statut === 'accepte' ? 'Validé' : 'Refusé');
         $decision->setMotif("Demande de type {$userRequest->getType()?->getLibelle()} (réf: {$userRequest->getRef()})");
 
-        // Récupérer le nom complet si disponible, sinon fallback sur email
-        $nomComplet = $user->getCitizenProfile()?->getNom() . ' ' . $user->getCitizenProfile()?->getPrenoms();
-        $decision->setValidePar($nomComplet ?: $user->getEmail());
+        // Récupérer l'admin connecté
+        $admin = $this->security->getUser();
+        if ($admin instanceof User) {
+            $nomComplet = trim(($admin->getCitizenProfile()?->getNom() ?? '') . ' ' . ($admin->getCitizenProfile()?->getPrenoms() ?? ''));
+            $decision->setValidePar($nomComplet !== '' ? $nomComplet : $admin->getEmail());
+        } else {
+            // fallback si jamais pas d'admin connecté
+            $decision->setValidePar('Système');
+        }
 
         $decision->setValideLe($now);
 

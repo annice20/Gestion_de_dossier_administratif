@@ -21,7 +21,7 @@ class ServicesListeController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $requestEntity->setStatut('nouveau');
+            $requestEntity->setStatut('En attente');
             $entityManager->persist($requestEntity);
             $entityManager->flush();
 

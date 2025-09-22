@@ -40,4 +40,25 @@ class DecisionRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+    public function getAllDecisions(): array
+    {
+        $connection = $this->getEntityManager()->getConnection();
+
+        $sql = "
+            SELECT 
+                r.ref,
+                c.nom,
+                c.prenoms,
+                d.resultat,
+                d.motif,
+                d.valide_par,
+                d.valide_le
+            FROM citizen_profile c
+            JOIN request r ON c.id = r.demandeur_id
+            JOIN decision d ON r.id = d.request_id
+        ";
+
+        return $connection->fetchAllAssociative($sql);
+    }
 }

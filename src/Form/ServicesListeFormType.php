@@ -22,6 +22,7 @@ class ServicesListeFormType extends AbstractType
                 'label' => 'Référence',
                 'attr' => [
                     'placeholder' => 'Ex: REF-2023-001',
+                    'class' => 'form-control',
                 ],
             ])
             ->add('demandeur', EntityType::class, [
@@ -33,7 +34,7 @@ class ServicesListeFormType extends AbstractType
                 'required' => false,
                 'placeholder' => 'Sélectionnez un demandeur',
                 'attr' => [
-                    'class' => 'select2', // Optionnel: pour utiliser Select2
+                    'class' => 'form-control select2',
                 ],
             ])
             ->add('type', EntityType::class, [
@@ -42,22 +43,14 @@ class ServicesListeFormType extends AbstractType
                 'label' => 'Type de demande',
                 'placeholder' => 'Sélectionnez un type de demande',
                 'attr' => [
-                    'class' => 'select2',
+                    'class' => 'form-control select2',
                 ],
-            ])
-            ->add('statut', ChoiceType::class, [
-                'label' => 'Statut',
-                'choices' => [
-                    'Nouveau' => 'nouveau',
-                    'En cours' => 'en_cours',
-                    'Traité' => 'traite',
-                ],
-                'placeholder' => 'Sélectionnez un statut',
             ])
             ->add('centre', TextType::class, [
                 'label' => 'Centre',
                 'attr' => [
                     'placeholder' => 'Ex: Centre Principal',
+                    'class' => 'form-control',
                 ],
             ])
             ->add('priorite', ChoiceType::class, [
@@ -67,6 +60,9 @@ class ServicesListeFormType extends AbstractType
                     'Urgente' => 1,
                 ],
                 'placeholder' => 'Sélectionnez une priorité',
+                'attr' => [
+                    'class' => 'form-control',
+                ],
             ])
             ->add('montant', MoneyType::class, [
                 'label' => 'Montant',
@@ -75,6 +71,7 @@ class ServicesListeFormType extends AbstractType
                 'attr' => [
                     'min' => 0,
                     'placeholder' => '0,00',
+                    'class' => 'form-control',
                 ],
             ])
             ->add('canal', ChoiceType::class, [
@@ -85,6 +82,9 @@ class ServicesListeFormType extends AbstractType
                     'Téléphone' => 'telephone',
                 ],
                 'placeholder' => 'Sélectionnez un canal',
+                'attr' => [
+                    'class' => 'form-control',
+                ],
             ])
         ;
     }

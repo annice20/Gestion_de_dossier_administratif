@@ -31,7 +31,7 @@ class Request
     #[ORM\OneToMany(mappedBy: 'request', targetEntity: Attachment::class, cascade: ['persist', 'remove'])]
     private Collection $attachments;
 
-    #[ORM\Column(length: 20)]
+    #[ORM\Column(length: 20, nullable: true)]
     private ?string $statut = null;
 
     #[ORM\Column(length: 50)]
