@@ -36,6 +36,30 @@ class ServicesListeController extends AbstractController
         if ($archivedCount > 0) {
             $this->addFlash('info', $archivedCount . ' anciennes demandes ont été archivées automatiquement.');
         }
+        // Dans votre contrôleur
+if ($form->isSubmitted() && $form->isValid()) {
+    $data = $form->getData();
+    
+    // Récupérer les données des formulaires modaux
+    $naissanceData = json_decode($request->request->get('form_naissance_data'), true);
+    $mariageData = json_decode($request->request->get('form_mariage_data'), true);
+    $decesData = json_decode($request->request->get('form_deces_data'), true);
+    
+    // Traiter les données selon le type sélectionné
+    switch ($data->getType()) {
+        case 'naissance':
+            // Traiter les données de naissance
+            break;
+        case 'mariage':
+            // Traiter les données de mariage
+            break;
+        case 'deces':
+            // Traiter les données de décès
+            break;
+    }
+    
+    // ... reste du traitement
+}
 
         return $this->render('services_liste/index.html.twig', [
             'form' => $form->createView(),
